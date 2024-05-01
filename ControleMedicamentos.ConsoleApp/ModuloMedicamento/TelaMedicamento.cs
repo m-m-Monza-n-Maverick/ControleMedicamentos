@@ -4,6 +4,12 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
 {
     internal class TelaMedicamento : TelaBase
     {
+        public TelaMedicamento(RepositorioBase repositorio, string nome)
+        {
+            this.repositorio = repositorio;
+            tipoEntidade = nome;
+        }
+
         public override void VisualizarRegistros(bool exibirTitulo)
         {
             if (exibirTitulo)

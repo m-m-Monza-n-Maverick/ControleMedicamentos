@@ -6,11 +6,15 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
 {
     internal class TelaRequisicaoSaida : TelaBase
     {
-        public TelaPaciente telaPaciente = null;
-        public TelaMedicamento telaMedicamento = null;
-
-        public RepositorioPaciente repositorioPaciente = null;
-        public RepositorioMedicamento repositorioMedicamento = null;
+        public TelaPaciente telaPaciente;
+        public TelaMedicamento telaMedicamento;
+        public TelaRequisicaoSaida(TelaPaciente telaPaciente, TelaMedicamento telaMedicamento, RepositorioBase repositorio, string nome)
+        {
+            this.telaPaciente = telaPaciente;
+            this.telaMedicamento = telaMedicamento;
+            this.repositorio = repositorio;
+            tipoEntidade = nome;
+        }
 
         public override void Registrar()
         {
@@ -87,14 +91,14 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
             Console.Write("Digite o ID do medicamento requisitado: ");
             int idMedicamento = Convert.ToInt32(Console.ReadLine());
 
-            Medicamento medicamentoSelecionado = (Medicamento)repositorioMedicamento.SelecionarPorId(idMedicamento);
+            Medicamento medicamentoSelecionado = (Medicamento)repositorio.SelecionarPorId(idMedicamento);
 
             telaPaciente.VisualizarRegistros(false);
 
             Console.Write("Digite o ID do paciente requisitante: ");
             int idPaciente = Convert.ToInt32(Console.ReadLine());
 
-            Paciente pacienteSelecionado = (Paciente)repositorioPaciente.SelecionarPorId(idPaciente);
+            Paciente pacienteSelecionado = (Paciente)repositorio.SelecionarPorId(idPaciente);
 
             Console.Write("Digite a quantidade do medicamente que deseja retirar: ");
             int quantidade = Convert.ToInt32(Console.ReadLine());

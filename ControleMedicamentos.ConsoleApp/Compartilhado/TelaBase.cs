@@ -1,11 +1,14 @@
-﻿namespace ControleMedicamentos.ConsoleApp.Compartilhado
+﻿using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
+using ControleMedicamentos.ConsoleApp.ModuloPaciente;
+using ControleMedicamentos.ConsoleApp.ModuloRequisicao;
+namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
     internal abstract class TelaBase
     {
         public string tipoEntidade = "";
-        public RepositorioBase repositorio = null;
+        public RepositorioBase repositorio;
 
-        public char ApresentarMenu()
+        public void ApresentarMenu(ref bool sair)
         {
             Console.Clear();
 
@@ -22,12 +25,18 @@
 
             Console.WriteLine("S - Voltar");
 
-            Console.WriteLine();
+            Console.Write("\nEscolha uma das opções: ");
+            string operacaoEscolhida = Console.ReadLine().ToUpper();
 
-            Console.Write("Escolha uma das opções: ");
-            char operacaoEscolhida = Convert.ToChar(Console.ReadLine());
-
-            return operacaoEscolhida;
+            switch (operacaoEscolhida)
+            {
+                case "1": Registrar(); break;
+                case "2": Editar(); break;
+                case "3": Excluir(); break;
+                case "4": VisualizarRegistros(true); break;
+                case "S": sair = true; break;
+                default: OpcaoInvalida(); break;
+            }
         }
 
         public virtual void Registrar()
@@ -163,5 +172,17 @@
         }
 
         protected abstract EntidadeBase ObterRegistro();
+        public void OpcaoInvalida()
+        {
+            Notificação(ConsoleColor.Red, "\n        Opção inválida. Tente novamente ");
+            Console.ReadKey(true);
+        }
+        public void Notificação(ConsoleColor cor, string texto)
+        {
+            Console.ForegroundColor = cor;
+            Console.Write(texto);
+            Console.ResetColor();
+        }
+
     }
 }
