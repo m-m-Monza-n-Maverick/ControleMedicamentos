@@ -1,6 +1,7 @@
 ﻿using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentos.ConsoleApp.ModuloPaciente;
 using ControleMedicamentos.ConsoleApp.ModuloRequisicao;
+using System.Collections;
 namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
     internal abstract class TelaBase
@@ -10,32 +11,37 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
         public void ApresentarMenu(ref bool sair)
         {
-            Console.Clear();
-
-            Console.WriteLine("----------------------------------------");
-            Console.WriteLine($"        Gestão de {tipoEntidade}s        ");
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine();
-
-            Console.WriteLine($"1 - Cadastrar {tipoEntidade}");
-            Console.WriteLine($"2 - Editar {tipoEntidade}");
-            Console.WriteLine($"3 - Excluir {tipoEntidade}");
-            Console.WriteLine($"4 - Visualizar {tipoEntidade}s");
-
-            Console.WriteLine("S - Voltar");
-
-            Console.Write("\nEscolha uma das opções: ");
-            string operacaoEscolhida = Console.ReadLine().ToUpper();
-
-            switch (operacaoEscolhida)
+            bool retornar = true;
+            while (retornar) 
             {
-                case "1": Registrar(); break;
-                case "2": Editar(); break;
-                case "3": Excluir(); break;
-                case "4": VisualizarRegistros(true); break;
-                case "S": sair = true; break;
-                default: OpcaoInvalida(); break;
+                Console.Clear();
+
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"        Gestão de {tipoEntidade}s        ");
+                Console.WriteLine("----------------------------------------");
+
+                Console.WriteLine();
+
+                Console.WriteLine($"1 - Cadastrar {tipoEntidade}");
+                Console.WriteLine($"2 - Editar {tipoEntidade}");
+                Console.WriteLine($"3 - Excluir {tipoEntidade}");
+                Console.WriteLine($"4 - Visualizar {tipoEntidade}s");
+                Console.WriteLine("R - Retornar");
+                Console.WriteLine("S - Sair");
+
+                string operacaoEscolhida = RecebeString("\nEscolha uma das opções: ");
+                retornar = false;
+
+                switch (operacaoEscolhida)
+                {
+                    case "1": Registrar(); break;
+                    case "2": Editar(); break;
+                    case "3": Excluir(); break;
+                    case "4": VisualizarRegistros(true); break;
+                    case "R": break;
+                    case "S": sair = true; break;
+                    default: OpcaoInvalida(ref retornar); break;
+                }
             }
         }
 
@@ -49,9 +55,9 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
             EntidadeBase entidade = ObterRegistro();
 
-            string[] erros = entidade.Validar();
+            ArrayList erros = entidade.Validar();
 
-            if (erros.Length > 0)
+            if (erros.Count > 0)
             {
                 ApresentarErros(erros);
                 return;
@@ -61,7 +67,6 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
             ExibirMensagem($"O {tipoEntidade} foi cadastrado com sucesso!", ConsoleColor.Green);
         }
-
         public void Editar()
         {
             ApresentarCabecalho();
@@ -85,9 +90,9 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
             EntidadeBase entidade = ObterRegistro();
 
-            string[] erros = entidade.Validar();
+            ArrayList erros = entidade.Validar();
 
-            if (erros.Length > 0)
+            if (erros.Count > 0)
             {
                 ApresentarErros(erros);
                 return;
@@ -103,7 +108,6 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
             ExibirMensagem($"O {tipoEntidade} foi editado com sucesso!", ConsoleColor.Green);
         }
-
         public void Excluir()
         {
             ApresentarCabecalho();
@@ -133,56 +137,45 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
             ExibirMensagem($"O {tipoEntidade} foi excluído com sucesso!", ConsoleColor.Green);
         }
-
         public abstract void VisualizarRegistros(bool exibirTitulo);
 
-        protected void ApresentarErros(string[] erros)
+        #region Auxiliares
+        protected void ApresentarErros(ArrayList erros)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-
-            for (int i = 0; i < erros.Length; i++)
-                Console.WriteLine(erros[i]);
-
-            Console.ResetColor();
-            Console.ReadLine();
+            foreach (string erro in erros) ExibirMensagem(erro, ConsoleColor.Red);
+            Console.ReadKey(true);
         }
-
         protected void ApresentarCabecalho()
         {
             Console.Clear();
-
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("|       Controle de Medicamentos       |");
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine();
+            Console.WriteLine("----------------------------------------\n");
         }
-
         public void ExibirMensagem(string mensagem, ConsoleColor cor)
         {
             Console.ForegroundColor = cor;
-
-            Console.WriteLine();
-
-            Console.WriteLine(mensagem);
-
+            Console.Write("\n" + mensagem);
             Console.ResetColor();
-
-            Console.ReadLine();
         }
 
         protected abstract EntidadeBase ObterRegistro();
-        public void OpcaoInvalida()
+        public void OpcaoInvalida(ref bool retornar)
         {
-            Notificação(ConsoleColor.Red, "\n        Opção inválida. Tente novamente ");
+            ExibirMensagem("        Opção inválida. Tente novamente ", ConsoleColor.Red);
+            retornar = true;
             Console.ReadKey(true);
         }
-        public void Notificação(ConsoleColor cor, string texto)
+        public void OpcaoInvalida()
         {
-            Console.ForegroundColor = cor;
-            Console.Write(texto);
-            Console.ResetColor();
+            ExibirMensagem("        Opção inválida. Tente novamente ", ConsoleColor.Red);
+            Console.ReadKey(true);
         }
-
+        public static string RecebeString(string texto)
+        {
+            Console.Write(texto);
+            return Console.ReadLine().ToUpper();
+        }
+        #endregion
     }
 }

@@ -1,12 +1,11 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentos.ConsoleApp.ModuloPaciente;
-
+using System.Collections;
 namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
 {
     internal class RequisicaoSaida : EntidadeBase
     {
-
         public Medicamento Medicamento { get; set; }
         public Paciente Paciente { get; set; }
         public DateTime DataRequisicao { get; set; }
@@ -16,37 +15,21 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
         {
             Medicamento = medicamentoSelecionado;
             Paciente = pacienteSelecionado;
-
             DataRequisicao = DateTime.Now;
             QuantidadeRetirada = quantidade;
         }
 
-        public override string[] Validar()
+        public override ArrayList Validar()
         {
-            string[] erros = new string[3];
-            int contadorErros = 0;
-
-            if (Medicamento == null)
-                erros[contadorErros++] = "O medicamento precisa ser preenchido";
-
-            if (Paciente == null)
-                erros[contadorErros++] = "O paciente precisa ser informado";
-
-            if (QuantidadeRetirada < 1)
-                erros[contadorErros++] = "Por favor informe uma quantidade válida";
-
-            string[] errosFiltrados = new string[contadorErros];
-
-            Array.Copy(erros, errosFiltrados, contadorErros);
-
-            return errosFiltrados;
+            ArrayList erros = new ArrayList();
+            VerificarNulo(ref erros, Medicamento.ToString(), "medicamento");
+            VerificarNulo(ref erros, Paciente.ToString(), "paciente");
+            VerificarNulo(ref erros, QuantidadeRetirada.ToString(), "quantidade");
+            return erros;
         }
-
         public bool RetirarMedicamento()
         {
-            if (Medicamento.Quantidade < QuantidadeRetirada)
-                return false;
-
+            if (Medicamento.Quantidade < QuantidadeRetirada) return false;
             Medicamento.Quantidade -= QuantidadeRetirada;
             return true;
         }
