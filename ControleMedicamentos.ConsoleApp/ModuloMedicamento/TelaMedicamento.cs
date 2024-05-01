@@ -45,21 +45,12 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
 
         protected override EntidadeBase ObterRegistro()
         {
-            Console.Write("Digite o nome: ");
-            string nome = Console.ReadLine();
+            string nome = RecebeString("Digite o nome: ");
+            string descricao = RecebeString("Digite a descrição: ");
+            string lote = RecebeString("Digite o lote: ");
+            DateTime dataValidade = RecebeData("Digite a data de validade: ");
 
-            Console.Write("Digite a descrição: ");
-            string descricao = Console.ReadLine();
-
-            Console.Write("Digite o lote: ");
-            string lote = Console.ReadLine();
-
-            Console.Write("Digite a data de validade: ");
-            DateTime dataValidade = Convert.ToDateTime(Console.ReadLine());
-
-            Medicamento medicamento = new Medicamento(nome, descricao, lote, dataValidade);
-
-            return medicamento;
+            return new Medicamento(nome, descricao, lote, dataValidade);
         }
     }
 }

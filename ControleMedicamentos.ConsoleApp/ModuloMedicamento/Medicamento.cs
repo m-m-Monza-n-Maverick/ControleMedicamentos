@@ -5,6 +5,12 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
 {
     internal class Medicamento : EntidadeBase
     {
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public string Lote { get; set; }
+        private DateTime DataValidade { get; set; }
+        public int Quantidade { get; set; } = 5;
+
         public Medicamento(string nome, string descricao, string lote, DateTime dataValidade)
         {
             Nome = nome;
@@ -12,12 +18,6 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
             Lote = lote;
             DataValidade = dataValidade;
         }
-
-        public string Nome { get; set; }
-        public string Descricao { get; set; }
-        public string Lote { get; set; }
-        private DateTime DataValidade { get; set; }
-        public int Quantidade { get; set; } = 5;
 
         public override ArrayList Validar()
         {

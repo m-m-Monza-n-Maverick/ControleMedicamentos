@@ -176,6 +176,28 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             Console.Write(texto);
             return Console.ReadLine().ToUpper();
         }
+        public DateTime RecebeData(string texto)
+        {
+            string data = RecebeString(" Informe a data: ");
+            char[] dataValidade = data.ToCharArray();
+            if (ValidaTabulacao(dataValidade) || ValidaDias(dataValidade) || ValidaMeses(dataValidade) || ValidaAnos(dataValidade))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n Data inválida! Tente novamente");
+                Console.ResetColor();
+
+                data = Convert.ToString(RecebeData(texto));
+            }
+            return Convert.ToDateTime(data);
+        }
+
+        #region Valida data
+        public bool ValidaTabulacao(char[] dataValidade) => dataValidade.Length != 10 || dataValidade[2] != '/' || dataValidade[5] != '/';
+        public bool ValidaDias(char[] dataValidade) => (dataValidade[0] != '0' && dataValidade[0] != '1' && dataValidade[0] != '2' && dataValidade[0] != '3') || (dataValidade[0] == '3' && dataValidade[1] != '0');
+        public bool ValidaMeses(char[] dataValidade) => (dataValidade[3] != '0' && dataValidade[3] != '1') || (dataValidade[3] == '1' && dataValidade[4] != '0' && dataValidade[4] != '1' && dataValidade[4] != '2');
+        public bool ValidaAnos(char[] dataValidade) => (dataValidade[6] != '2' || dataValidade[7] != '0' || (dataValidade[8] != '0' && dataValidade[8] != '1' && dataValidade[8] != '2') || (dataValidade[8] == '2' && dataValidade[9] != '0' && dataValidade[9] != '1' && dataValidade[9] != '2' && dataValidade[9] != '3' && dataValidade[9] != '4'));
+        #endregion
+
         #endregion
     }
 }
