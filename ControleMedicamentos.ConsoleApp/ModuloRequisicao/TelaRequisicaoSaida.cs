@@ -1,6 +1,7 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentos.ConsoleApp.ModuloPaciente;
+using System.Collections;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
 {
@@ -26,9 +27,9 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
 
             RequisicaoSaida entidade = (RequisicaoSaida)ObterRegistro();
 
-            string[] erros = entidade.Validar();
+            ArrayList erros = entidade.Validar();
 
-            if (erros.Length > 0)
+            if (erros.Count > 0)
             {
                 ApresentarErros(erros);
                 return;
