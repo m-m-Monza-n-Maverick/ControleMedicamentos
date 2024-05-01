@@ -1,8 +1,16 @@
-﻿namespace ControleMedicamentos.ConsoleApp.Compartilhado
+﻿using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
+using ControleMedicamentos.ConsoleApp.ModuloPaciente;
+using ControleMedicamentos.ConsoleApp.ModuloRequisicao;
+
+namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
-    internal static class TelaPrincipal
+    internal class TelaPrincipal
     {
-        public static char ApresentarMenuPrincipal()
+        static TelaPaciente telaPaciente = new TelaPaciente(new RepositorioPaciente(), "paciente");
+        static TelaMedicamento telaMedicamento = new TelaMedicamento(new RepositorioMedicamento(), "medicamento");
+        TelaRequisicaoSaida telaRequisicaoSaida = new TelaRequisicaoSaida(telaPaciente, telaMedicamento, new RepositorioRequisicaoSaida(), "requisição");
+
+        public void MenuPrincipal(ref bool sair)
         {
             Console.Clear();
 
@@ -18,13 +26,17 @@
 
             Console.WriteLine("S - Sair");
 
-            Console.WriteLine();
+            Console.Write("\nEscolha uma das opções: ");
 
-            Console.Write("Escolha uma das opções: ");
-
-            char opcaoEscolhida = Console.ReadLine()[0];
-
-            return opcaoEscolhida;
+            string opcaoEscolhida = Console.ReadLine().ToUpper();
+            switch (opcaoEscolhida)
+            {
+                case "1": telaMedicamento.ApresentarMenu(ref sair); break;
+                case "2": telaPaciente.ApresentarMenu(ref sair); break;
+                case "3": telaRequisicaoSaida.ApresentarMenu(ref sair); break;
+                case "S": sair = true; break;
+                default: telaMedicamento.OpcaoInvalida(); break;
+            }
         }
     }
 }
