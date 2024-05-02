@@ -157,6 +157,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             Console.ForegroundColor = cor;
             Console.Write("\n" + mensagem);
             Console.ResetColor();
+            Console.ReadKey(true);
         }
 
         protected abstract EntidadeBase ObterRegistro();

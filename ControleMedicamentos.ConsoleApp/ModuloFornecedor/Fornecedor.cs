@@ -1,5 +1,6 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,13 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             this.cnpj = cnpj;
         }
 
-        public override string[] Validar()
+        public override ArrayList Validar()
         {
-            throw new NotImplementedException();
+            ArrayList erros = new ArrayList();
+            VerificarNulo(ref erros, nome, "nome");
+            VerificarNulo(ref erros, telefone, "telefone");
+            VerificarNulo(ref erros, cnpj, "CNPJ");
+            return erros;
         }
     }
 }

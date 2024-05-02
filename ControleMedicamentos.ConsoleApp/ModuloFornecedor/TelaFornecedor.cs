@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
+using ControleMedicamentos.ConsoleApp.ModuloFuncionario;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
 {
@@ -51,18 +52,11 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
 
         protected override EntidadeBase ObterRegistro()
         {
-            Console.WriteLine("Digite o nome do fornecedor: ");
-            string nome = Console.ReadLine();
+            string nome = RecebeString("Digite o nome: ");
+            string telefone = RecebeString("Digite o telefone: ");
+            string cnpj = RecebeString("Digite o CNPJ: ");
 
-            Console.WriteLine("Digite o telefone do fornecedor: ");
-            string telefone = Console.ReadLine();
-
-            Console.WriteLine("Digite o CNPJ do fornecedor: ");
-            string cnpj = Console.ReadLine();
-
-            Fornecedor fornecedor = new Fornecedor(nome, telefone, cnpj);
-
-            return fornecedor;
+            return new Fornecedor(nome, telefone, cnpj);
         }
     }
 }
