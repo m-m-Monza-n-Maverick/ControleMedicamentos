@@ -25,10 +25,10 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificarNulo(ref erros, nome, "nome");
-            VerificarNulo(ref erros, cpf, "CPF");
-            VerificarNulo(ref erros, login, "login");
-            VerificarNulo(ref erros, senha, "senha");
+            VerificaNulo(ref erros, nome, "nome");
+            VerificaNulo(ref erros, cpf, "CPF");
+            VerificaNulo(ref erros, login, "login");
+            VerificaNulo(ref erros, senha, "senha");
             return erros;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,37 +21,47 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
             if (exibirTitulo)
             {
                 ApresentarCabecalho();
-                Console.WriteLine("Visualizando Medicamentos...");
+                Console.WriteLine("Visualizando funcionarios...");
             }
 
-            Console.WriteLine(
-                "\n{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}",
-                "Id", "Nome", "CPF", "Login", "Senha"
-            );
+            Console.WriteLine("{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}", "Id", "Nome", "CPF", "Login", "Senha");
 
             EntidadeBase[] funcionariosCadastrados = repositorio.SelecionarTodos();
 
             foreach (Funcionario funcionario in funcionariosCadastrados)
             {
-                if (funcionario == null)
-                    continue;
+                if (funcionario == null) continue;
 
-                Console.WriteLine(
-                    "{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}",
-                    funcionario.Id, funcionario.nome, funcionario.cpf, funcionario.login, funcionario.senha
-                );
+                Console.WriteLine("{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}",
+                    funcionario.Id, funcionario.nome, funcionario.cpf, funcionario.login, funcionario.senha);
             }
-            Console.ReadKey(true);
+            if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
         }
 
         protected override EntidadeBase ObterRegistro()
         {
-            string nome = RecebeString("Digite o nome: ");
-            string cpf = RecebeString("Digite o cpf: ");
-            string login = RecebeString("Digite o login: ");
-            string senha = RecebeString("Digite a senha: ");
+            string nome = "a", cpf = "a", login = "a", senha = "a";
+            EntidadeBase novoFuncionario = new Funcionario(nome, cpf, login, senha);
+
+            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref nome, "Digite o nome: ");
+            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref cpf, "Digite o CPF: ");
+            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref login, "Digite o login: ");
+            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref senha, "Digite a senha: ");
 
             return new Funcionario(nome, cpf, login, senha);
+        }
+
+        private void RecebePropriedade(ref string nome, ref string cpf, ref string login, ref string senha, ref EntidadeBase novoFuncionario, ref string propriedade, string texto)
+        {
+            ArrayList erros;
+            do
+            {
+                propriedade = RecebeString(texto);
+                novoFuncionario = new Funcionario(nome, cpf, login, senha);
+                erros = novoFuncionario.Validar();
+                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+            }
+            while (erros.Count != 0);
         }
     }
 }

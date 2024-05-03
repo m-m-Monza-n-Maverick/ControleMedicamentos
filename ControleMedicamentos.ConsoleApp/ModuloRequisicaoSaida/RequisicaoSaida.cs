@@ -22,9 +22,9 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificarNulo(ref erros, Medicamento.ToString(), "medicamento");
-            VerificarNulo(ref erros, Paciente.ToString(), "paciente");
-            VerificarNulo(ref erros, QuantidadeRetirada.ToString(), "quantidade");
+            VerificaNulo(ref erros, Medicamento, "medicamento");
+            VerificaNulo(ref erros, Paciente, "paciente");
+            VerificaNulo(ref erros, QuantidadeRetirada.ToString(), "quantidade");
             return erros;
         }
         public bool RetirarMedicamento()

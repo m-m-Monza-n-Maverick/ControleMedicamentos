@@ -24,9 +24,9 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificarNulo(ref erros, nome, "nome");
-            VerificarNulo(ref erros, telefone, "telefone");
-            VerificarNulo(ref erros, cnpj, "CNPJ");
+            VerificaNulo(ref erros, nome, "nome");
+            VerificaNulo(ref erros, telefone, "telefone");
+            VerificaNulo(ref erros, cnpj, "CNPJ");
             return erros;
         }
     }

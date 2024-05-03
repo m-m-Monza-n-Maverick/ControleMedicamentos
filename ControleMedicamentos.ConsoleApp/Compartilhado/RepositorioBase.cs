@@ -2,14 +2,13 @@
 {
     internal abstract class RepositorioBase
     {
-        protected EntidadeBase[] registros = new EntidadeBase[100];
-
-        protected int contadorId = 1;
+        private EntidadeBase[] registros = new EntidadeBase[100];
+        public int contadorId = 0;
 
         public void Cadastrar(EntidadeBase novoRegistro)
         {
+            contadorId++;
             novoRegistro.Id = contadorId++;
-
             RegistrarItem(novoRegistro);
         }
 
@@ -61,13 +60,10 @@
             {
                 EntidadeBase e = registros[i];
 
-                if (e == null)
-                    continue;
+                if (e == null) continue;
 
-                else if (e.Id == id)
-                    return e;
+                else if (e.Id == id) return e;
             }
-
             return null;
         }
 
