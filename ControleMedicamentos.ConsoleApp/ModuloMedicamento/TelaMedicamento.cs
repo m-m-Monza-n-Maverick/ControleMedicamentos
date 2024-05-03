@@ -13,11 +13,8 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
 
         public override void VisualizarRegistros(bool exibirTitulo)
         {
-            if (exibirTitulo)
-            {
-                ApresentarCabecalhoEntidade();
-                Console.WriteLine("Visualizando medicamentos...");
-            }
+            if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
+            if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando medicamentos...\n");
 
             Console.WriteLine("{0, -10} | {1, -20} | {2, -20}", "Id", "Nome", "Quantidade");
 

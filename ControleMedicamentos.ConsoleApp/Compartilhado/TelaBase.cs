@@ -14,9 +14,9 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             bool retornar = true;
             while (retornar)
             {
-                ApresentarCabecalhoEntidade();
+                ApresentarCabecalhoEntidade("");
 
-                Console.WriteLine($"\n1 - Cadastrar {tipoEntidade}");
+                Console.WriteLine($"1 - Cadastrar {tipoEntidade}");
                 Console.WriteLine($"2 - Editar {tipoEntidade}");
                 Console.WriteLine($"3 - Excluir {tipoEntidade}");
                 Console.WriteLine($"4 - Visualizar {tipoEntidade}s");
@@ -38,88 +38,59 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
                 }
             }
         }
-
         public virtual void Registrar()
         {
-            ApresentarCabecalhoEntidade();
-            Console.WriteLine($"Cadastrando {tipoEntidade}...\n");
+            ApresentarCabecalhoEntidade($"Cadastrando {tipoEntidade}...\n");
 
             EntidadeBase entidade = ObterRegistro();
-            repositorio.Cadastrar(entidade);
-
-            ExibirMensagem($"\nO(a) {tipoEntidade} foi cadastrado(a) com sucesso! ", ConsoleColor.Green);
-            Console.ReadKey(true);
+            RealizaAcao(() => repositorio.Cadastrar(entidade), "cadastrado");
         }
+        protected abstract EntidadeBase ObterRegistro();
         public void Editar()
         {
-            ApresentarCabecalhoEntidade();
-            Console.WriteLine($"Editando {tipoEntidade}...\n");
-
-            VisualizarRegistros(false);
-
-            int idEntidadeEscolhida = RecebeInt($"\nDigite o ID do {tipoEntidade} que deseja editar: ");
-
-            if (!repositorio.Existe(idEntidadeEscolhida))
+            while (true)
             {
-                ExibirMensagem($"O {tipoEntidade} mencionado não existe!", ConsoleColor.DarkYellow);
-                return;
+                if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
+
+                ApresentarCabecalhoEntidade($"Editando {tipoEntidade}...\n");
+                VisualizarRegistros(false);
+
+                int idEntidadeEscolhida = RecebeInt($"Digite o ID do {tipoEntidade} que deseja editar: ");
+
+                if (!repositorio.Existe(idEntidadeEscolhida)) IdInvalido();
+                else
+                {
+                    EntidadeBase entidade = ObterRegistro();
+                    RealizaAcao(() => repositorio.Editar(idEntidadeEscolhida, entidade), "editado");
+                    break;
+                }
             }
-
-            EntidadeBase entidade = ObterRegistro();
-            ArrayList erros = entidade.Validar();
-
-            if (erros.Count > 0)
-            {
-                ApresentarErros(erros);
-                return;
-            }
-
-            bool conseguiuEditar = repositorio.Editar(idEntidadeEscolhida, entidade);
-
-            if (!conseguiuEditar)
-            {
-                ExibirMensagem($"Houve um erro durante a edição de {tipoEntidade}", ConsoleColor.Red);
-                return;
-            }
-
-            ExibirMensagem($"\nO {tipoEntidade} foi editado com sucesso!", ConsoleColor.Green);
         }
         public void Excluir()
         {
-            ApresentarCabecalhoEntidade();
-
-            Console.WriteLine($"Excluindo {tipoEntidade}...");
-
-            Console.WriteLine();
-
-            VisualizarRegistros(false);
-
-            Console.Write($"Digite o ID do {tipoEntidade} que deseja excluir: ");
-            int idRegistroEscolhido = Convert.ToInt32(Console.ReadLine());
-
-            if (!repositorio.Existe(idRegistroEscolhido))
+            while(true)
             {
-                ExibirMensagem($"O {tipoEntidade} mencionado não existe!", ConsoleColor.DarkYellow);
-                return;
+                ApresentarCabecalhoEntidade($"Excluindo {tipoEntidade}...\n");
+                VisualizarRegistros(false);
+
+                int idRegistroEscolhido = RecebeInt($"Digite o ID do {tipoEntidade} que deseja excluir: ");
+
+                if (!repositorio.Existe(idRegistroEscolhido)) IdInvalido();
+                else
+                {
+                    RealizaAcao(() => repositorio.Excluir(idRegistroEscolhido), "excluído");
+                    break;
+                }
             }
-
-            bool conseguiuExcluir = repositorio.Excluir(idRegistroEscolhido);
-
-            if (!conseguiuExcluir)
-            {
-                ExibirMensagem($"Houve um erro durante a exclusão do {tipoEntidade}", ConsoleColor.Red);
-                return;
-            }
-
-            ExibirMensagem($"O {tipoEntidade} foi excluído com sucesso!", ConsoleColor.Green);
         }
         public abstract void VisualizarRegistros(bool exibirTitulo);
 
         #region Auxiliares
-        protected void ApresentarErros(ArrayList erros)
+        protected void RealizaAcao(Action acao, string acaoRealizada)
         {
-            foreach (string erro in erros) ExibirMensagem(erro, ConsoleColor.Red);
-            Console.WriteLine();
+            acao();
+            ExibirMensagem($"\nO(a) {tipoEntidade} foi {acaoRealizada}(a) com sucesso!", ConsoleColor.Green);
+            Console.ReadKey(true);
         }
         protected void ApresentarCabecalho()
         {
@@ -128,12 +99,18 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             Console.WriteLine("|       Controle de Medicamentos       |");
             Console.WriteLine("----------------------------------------");
         }
-        public void ApresentarCabecalhoEntidade()
+        public void ApresentarCabecalhoEntidade(string texto)
         {
             Console.Clear();
             Console.WriteLine("----------------------------------------");
             Console.WriteLine($"          Gestão de {tipoEntidade}s        ");
             Console.WriteLine("----------------------------------------");
+            Console.WriteLine(texto);
+        }
+        protected void ApresentarErros(ArrayList erros)
+        {
+            foreach (string erro in erros) ExibirMensagem(erro, ConsoleColor.Red);
+            Console.WriteLine();
         }
         public void ExibirMensagem(string mensagem, ConsoleColor cor)
         {
@@ -141,18 +118,8 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             Console.Write(mensagem);
             Console.ResetColor();
         }
-        protected abstract EntidadeBase ObterRegistro();
-        public void OpcaoInvalida(ref bool retornar)
-        {
-            ExibirMensagem("        Opção inválida. Tente novamente ", ConsoleColor.Red);
-            retornar = true;
-            Console.ReadKey(true);
-        }
-        public void OpcaoInvalida()
-        {
-            ExibirMensagem("        Opção inválida. Tente novamente ", ConsoleColor.Red);
-            Console.ReadKey(true);
-        }
+
+        #region Inputs
         public static string RecebeString(string texto)
         {
             Console.Write(texto);
@@ -164,9 +131,9 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             string quantidade = "", input = Console.ReadLine();
             if (string.IsNullOrEmpty(input)) NaoEhNumero(ref input, texto);
 
-            foreach (char c in input.ToCharArray()) 
+            foreach (char c in input.ToCharArray())
                 if (Convert.ToInt32(c) >= 48 && Convert.ToInt32(c) <= 57) quantidade += c;
-            
+
             if (quantidade.Length != input.Length) NaoEhNumero(ref quantidade, texto);
 
             return Convert.ToInt32(quantidade);
@@ -182,18 +149,37 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             }
             return Convert.ToDateTime(data);
         }
+        #endregion
 
-        #region Valida data
+        #region Validações
+        public void OpcaoInvalida(ref bool retornar)
+        {
+            ExibirMensagem("Opção inválida. Tente novamente ", ConsoleColor.Red);
+            retornar = true;
+            Console.ReadKey(true);
+        }
+        public void OpcaoInvalida()
+        {
+            ExibirMensagem("Opção inválida. Tente novamente ", ConsoleColor.Red);
+            Console.ReadKey(true);
+        }
         public bool ValidaTabulacao(char[] dataValidade) => dataValidade.Length != 10 || dataValidade[2] != '/' || dataValidade[5] != '/';
         public bool ValidaDias(char[] dataValidade) => (dataValidade[0] != '0' && dataValidade[0] != '1' && dataValidade[0] != '2' && dataValidade[0] != '3') || (dataValidade[0] == '3' && dataValidade[1] != '0');
         public bool ValidaMeses(char[] dataValidade) => (dataValidade[3] != '0' && dataValidade[3] != '1') || (dataValidade[3] == '1' && dataValidade[4] != '0' && dataValidade[4] != '1' && dataValidade[4] != '2');
-        #endregion
-
-        #region Valida int
         public void NaoEhNumero(ref string input, string texto)
         {
-            ExibirMensagem("Não é um número!\n", ConsoleColor.Red);
+            ExibirMensagem("Por favor, insira um número ", ConsoleColor.Red);
             input = Convert.ToString(RecebeInt(texto)); //Para garantir que, ao sair do loop, o método "RecebeInt" não vai puxar a "input" original (nula)
+        }
+        private void IdInvalido()
+        {
+            ExibirMensagem($"\nO {tipoEntidade} mencionado não existe! ", ConsoleColor.DarkYellow);
+            Console.ReadKey(true);
+        }
+        protected void RepositorioVazio()
+        {
+            ExibirMensagem($"Ainda não existem itens cadastrados! ", ConsoleColor.Red);
+            Console.ReadKey(true);
         }
         #endregion
 

@@ -20,19 +20,12 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
 
         public override void VisualizarRegistros(bool exibirTitulo)
         {
-            if (exibirTitulo)
-            {
-                ApresentarCabecalho();
-
-                Console.WriteLine("Visualizando Fornecedores...");
-            }
-
-            Console.WriteLine();
+            if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
+            if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando fornecedores...");
 
             Console.WriteLine(
                 "{0, -10} | {1, -20} | {2, -20}| {3, -20}",
-                "Id", "Nome", "CNPJ", "Telefone"
-            );
+                "Id", "Nome", "CNPJ", "Telefone" );
 
             EntidadeBase[] fornecedoresCadastrados = repositorio.SelecionarTodos();
 
