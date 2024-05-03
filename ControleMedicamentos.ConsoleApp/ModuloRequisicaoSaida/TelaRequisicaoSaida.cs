@@ -20,38 +20,26 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
 
         public override void Registrar()
         {
-            ApresentarCabecalhoEntidade();
-
-            if (telaMedicamento.repositorio.contadorId != 0 && telaPaciente.repositorio.contadorId != 0)
+            ApresentarCabecalhoEntidade($"Cadastrando {tipoEntidade}...\n");
+            if (!telaMedicamento.repositorio.ExistemItensCadastrados() || !telaPaciente.repositorio.ExistemItensCadastrados()) RepositorioVazio();
+            else
             {
-                Console.WriteLine($"Cadastrando {tipoEntidade}...\n");
                 RequisicaoSaida entidade = (RequisicaoSaida)ObterRegistro();
 
-                bool conseguiuRetirar = entidade.RetirarMedicamento();
-
-                if (!conseguiuRetirar)
+                if (!entidade.RetirarMedicamento())
                 {
                     ExibirMensagem("A quantidade de retirada informada não está disponível.", ConsoleColor.DarkYellow);
-                    return;
+                    Console.ReadKey(true);
                 }
-
-                repositorio.Cadastrar(entidade);
-
-                ExibirMensagem($"\nA {tipoEntidade} foi cadastrada com sucesso!", ConsoleColor.Green);
-                Console.ReadKey(true);
+                else RealizaAcao(() => repositorio.Cadastrar(entidade), "cadastrado");
             }
-            else ExibirMensagem(" Ainda não existem medicamentos e/ou pacientes\n\t    'Enter' para retornar ", ConsoleColor.Red);
         }
-
         public override void VisualizarRegistros(bool exibirTitulo)
         {
-            if (exibirTitulo)
-            {
-                ApresentarCabecalho();
-                Console.WriteLine("Visualizando Requisições de Saída...");
-            }
+            if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
+            if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando Requisições de Saída...\n");
 
-            Console.WriteLine( "\n{0, -10} | {1, -15} | {2, -15} | {3, -20} | {4, -5}",
+            Console.WriteLine( "{0, -10} | {1, -15} | {2, -15} | {3, -20} | {4, -5}",
                 "Id", "Medicamento", "Paciente", "Data de Requisição", "Quantidade" );
 
             EntidadeBase[] requisicoesCadastradas = repositorio.SelecionarTodos();
@@ -65,46 +53,64 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
                     requisicao.Id,
                     requisicao.Medicamento.Nome,
                     requisicao.Paciente.Nome,
-                    requisicao.DataRequisicao.ToShortDateString(),
+                    requisicao.DataRequisicao.ToString("d"),
                     requisicao.QuantidadeRetirada );
             }
-            Console.ReadKey(true);
-        }
 
+            if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
+            else Console.WriteLine();
+        }
         protected override EntidadeBase ObterRegistro()
         {
             Medicamento medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(1);
             Paciente pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(1);
             int quantidade = 0;
             ArrayList erros;
-
             EntidadeBase novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade);
 
+            RecebePropriedade(ref medicamentoSelecionado, pacienteSelecionado, quantidade, ref novaRequisicaoSaida, "Digite o ID do medicamento requisitado: ");
+            ExibirMensagem($"Medicamento selecionado: {medicamentoSelecionado.Nome}\n", ConsoleColor.Cyan);
+            
+            RecebePropriedade(medicamentoSelecionado, ref pacienteSelecionado, quantidade, ref novaRequisicaoSaida, "Digite o ID do paciente requisitante: ");
+            ExibirMensagem($"Propriedade selecionado: {pacienteSelecionado.Nome}\n", ConsoleColor.Cyan);
+            
+            RecebePropriedade(medicamentoSelecionado, pacienteSelecionado, ref quantidade, ref novaRequisicaoSaida, ref quantidade, "Digite a quantidade do medicamente que deseja retirar: ");
+            return novaRequisicaoSaida;
+        }
+
+        private void RecebePropriedade(ref Medicamento medicamentoSelecionado, Paciente pacienteSelecionado, int quantidade, ref EntidadeBase novaRequisicaoSaida, string texto)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Medicamentos...");
             telaMedicamento.VisualizarRegistros(false);
+            Console.ResetColor();
+            ArrayList erros;
             do
             {
-                int idMedicamento = RecebeInt("Digite o ID do medicamento requisitado: ");
-                medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idMedicamento);
+                int idMedicamento = RecebeInt(texto);
+                medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idMedicamento); 
                 novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade);
                 erros = novaRequisicaoSaida.Validar();
                 if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
             }
             while (erros.Count != 0);
-
+        }
+        private void RecebePropriedade(Medicamento medicamentoSelecionado, ref Paciente pacienteSelecionado, int quantidade, ref EntidadeBase novaRequisicaoSaida, string texto)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("\nPacientes...");
             telaPaciente.VisualizarRegistros(false);
+            Console.ResetColor();
+            ArrayList erros;
             do
             {
-                int idPaciente = RecebeInt("Digite o ID do paciente requisitado: ");
+                int idPaciente = RecebeInt(texto);
                 pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(idPaciente);
                 novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade);
                 erros = novaRequisicaoSaida.Validar();
                 if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
             }
             while (erros.Count != 0);
-
-            RecebePropriedade(medicamentoSelecionado, pacienteSelecionado, ref quantidade, ref novaRequisicaoSaida, ref quantidade, "Digite a quantidade do medicamente que deseja retirar: ");
-
-            return novaRequisicaoSaida;
         }
         private void RecebePropriedade(Medicamento medicamentoSelecionado, Paciente pacienteSelecionado, ref int quantidade, ref EntidadeBase novaRequisicaoSaida, ref int propriedade, string texto)
         {

@@ -18,13 +18,11 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
 
         public override void VisualizarRegistros(bool exibirTitulo)
         {
-            if (exibirTitulo)
-            {
-                ApresentarCabecalho();
-                Console.WriteLine("Visualizando funcionarios...");
-            }
+            if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
+            if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando funcionários...\n");
 
-            Console.WriteLine("{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}", "Id", "Nome", "CPF", "Login", "Senha");
+            Console.WriteLine("{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}", 
+                                "Id", "Nome", "CPF", "Login", "Senha");
 
             EntidadeBase[] funcionariosCadastrados = repositorio.SelecionarTodos();
 
@@ -59,7 +57,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
                 propriedade = RecebeString(texto);
                 novoFuncionario = new Funcionario(nome, cpf, login, senha);
                 erros = novoFuncionario.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+                if (erros.Count != 0) ApresentarErros(erros);
             }
             while (erros.Count != 0);
         }

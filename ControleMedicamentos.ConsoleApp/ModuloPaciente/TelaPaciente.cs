@@ -14,32 +14,23 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
 
         public override void VisualizarRegistros(bool exibirTitulo)
         {
-            if (exibirTitulo)
-            {
-                ApresentarCabecalho();
+            if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
+            if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando pacientes...\n");
 
-                Console.WriteLine("Visualizando Pacientes...");
-            }
-
-            Console.WriteLine();
-
-            Console.WriteLine(
-                "{0, -10} | {1, -15} | {2, -15} | {3, -15}",
-                "Id", "Nome", "Telefone", "Cartão do SUS"
-            );
+            Console.WriteLine("{0, -10} | {1, -15} | {2, -15} | {3, -15}",
+                                 "Id", "Nome", "Telefone", "Cartão do SUS" );
 
             EntidadeBase[] pacientesCadastrados = repositorio.SelecionarTodos();
 
             foreach (Paciente paciente in pacientesCadastrados)
             {
-                if (paciente == null)
-                    continue;
+                if (paciente == null) continue;
 
                 Console.WriteLine(
                     "{0, -10} | {1, -15} | {2, -15} | {3, -15}",
-                    paciente.Id, paciente.Nome, paciente.Telefone, paciente.CartaoSus
-                );
+                    paciente.Id, paciente.Nome, paciente.Telefone, paciente.CartaoSus );
             }
+
             if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
             else Console.WriteLine();
         }

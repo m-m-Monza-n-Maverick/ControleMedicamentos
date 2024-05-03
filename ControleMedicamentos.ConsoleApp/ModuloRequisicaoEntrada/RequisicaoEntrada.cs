@@ -2,6 +2,7 @@
 using ControleMedicamentos.ConsoleApp.ModuloFornecedor;
 using ControleMedicamentos.ConsoleApp.ModuloFuncionario;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
+using ControleMedicamentos.ConsoleApp.ModuloPaciente;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,7 +34,12 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
 
         public override ArrayList Validar()
         {
-             throw new NotImplementedException();
+            ArrayList erros = new ArrayList();
+            VerificaNulo(ref erros, medicamento, "medicamento");
+            VerificaNulo(ref erros, fornecedor, "fornecedor");
+            VerificaNulo(ref erros, funcionario, "funcionário");
+            VerificaNulo(ref erros, quantidadeRequisitada.ToString(), "quantidade");
+            return erros;
         }
     }
 }

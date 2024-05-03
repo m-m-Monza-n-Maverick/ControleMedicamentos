@@ -15,7 +15,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         protected void VerificaNulo(ref ArrayList erros, EntidadeBase campoTestado, string mostraCampo)
         {
             if (campoTestado == null)
-                erros.Add($"\nEste ID não existe. Tente novamente");
+                erros.Add($"\nEste item não existe. Tente novamente");
         }
         protected void VerificaTamanho(ref ArrayList erros, string campoTestado, string mostraCampo, int tamanho)
         {
