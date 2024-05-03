@@ -12,17 +12,11 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         public void ApresentarMenu(ref bool sair)
         {
             bool retornar = true;
-            while (retornar) 
+            while (retornar)
             {
-                Console.Clear();
+                ApresentarCabecalhoEntidade();
 
-                Console.WriteLine("----------------------------------------");
-                Console.WriteLine($"        Gestão de {tipoEntidade}s        ");
-                Console.WriteLine("----------------------------------------");
-
-                Console.WriteLine();
-
-                Console.WriteLine($"1 - Cadastrar {tipoEntidade}");
+                Console.WriteLine($"\n1 - Cadastrar {tipoEntidade}");
                 Console.WriteLine($"2 - Editar {tipoEntidade}");
                 Console.WriteLine($"3 - Excluir {tipoEntidade}");
                 Console.WriteLine($"4 - Visualizar {tipoEntidade}s");
@@ -47,38 +41,23 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
         public virtual void Registrar()
         {
-            ApresentarCabecalho();
-
-            Console.WriteLine($"Cadastrando {tipoEntidade}...");
-
-            Console.WriteLine();
+            ApresentarCabecalhoEntidade();
+            Console.WriteLine($"Cadastrando {tipoEntidade}...\n");
 
             EntidadeBase entidade = ObterRegistro();
-
-            ArrayList erros = entidade.Validar();
-
-            if (erros.Count > 0)
-            {
-                ApresentarErros(erros);
-                return;
-            }
-
             repositorio.Cadastrar(entidade);
 
-            ExibirMensagem($"O {tipoEntidade} foi cadastrado com sucesso!", ConsoleColor.Green);
+            ExibirMensagem($"\nO(a) {tipoEntidade} foi cadastrado(a) com sucesso! ", ConsoleColor.Green);
+            Console.ReadKey(true);
         }
         public void Editar()
         {
-            ApresentarCabecalho();
-
-            Console.WriteLine($"Editando {tipoEntidade}...");
-
-            Console.WriteLine();
+            ApresentarCabecalhoEntidade();
+            Console.WriteLine($"Editando {tipoEntidade}...\n");
 
             VisualizarRegistros(false);
 
-            Console.Write($"Digite o ID do {tipoEntidade} que deseja editar: ");
-            int idEntidadeEscolhida = Convert.ToInt32(Console.ReadLine());
+            int idEntidadeEscolhida = RecebeInt($"\nDigite o ID do {tipoEntidade} que deseja editar: ");
 
             if (!repositorio.Existe(idEntidadeEscolhida))
             {
@@ -86,10 +65,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
                 return;
             }
 
-            Console.WriteLine();
-
             EntidadeBase entidade = ObterRegistro();
-
             ArrayList erros = entidade.Validar();
 
             if (erros.Count > 0)
@@ -106,11 +82,11 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
                 return;
             }
 
-            ExibirMensagem($"O {tipoEntidade} foi editado com sucesso!", ConsoleColor.Green);
+            ExibirMensagem($"\nO {tipoEntidade} foi editado com sucesso!", ConsoleColor.Green);
         }
         public void Excluir()
         {
-            ApresentarCabecalho();
+            ApresentarCabecalhoEntidade();
 
             Console.WriteLine($"Excluindo {tipoEntidade}...");
 
@@ -143,23 +119,28 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         protected void ApresentarErros(ArrayList erros)
         {
             foreach (string erro in erros) ExibirMensagem(erro, ConsoleColor.Red);
-            Console.ReadKey(true);
+            Console.WriteLine();
         }
         protected void ApresentarCabecalho()
         {
             Console.Clear();
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("|       Controle de Medicamentos       |");
-            Console.WriteLine("----------------------------------------\n");
+            Console.WriteLine("----------------------------------------");
+        }
+        public void ApresentarCabecalhoEntidade()
+        {
+            Console.Clear();
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine($"          Gestão de {tipoEntidade}s        ");
+            Console.WriteLine("----------------------------------------");
         }
         public void ExibirMensagem(string mensagem, ConsoleColor cor)
         {
             Console.ForegroundColor = cor;
-            Console.Write("\n" + mensagem);
+            Console.Write(mensagem);
             Console.ResetColor();
-            Console.ReadKey(true);
         }
-
         protected abstract EntidadeBase ObterRegistro();
         public void OpcaoInvalida(ref bool retornar)
         {
@@ -177,16 +158,26 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             Console.Write(texto);
             return Console.ReadLine().ToUpper();
         }
+        public int RecebeInt(string texto)
+        {
+            Console.Write(texto);
+            string quantidade = "", input = Console.ReadLine();
+            if (string.IsNullOrEmpty(input)) NaoEhNumero(ref input, texto);
+
+            foreach (char c in input.ToCharArray()) 
+                if (Convert.ToInt32(c) >= 48 && Convert.ToInt32(c) <= 57) quantidade += c;
+            
+            if (quantidade.Length != input.Length) NaoEhNumero(ref quantidade, texto);
+
+            return Convert.ToInt32(quantidade);
+        }
         public DateTime RecebeData(string texto)
         {
-            string data = RecebeString(" Informe a data: ");
+            string data = RecebeString(texto);
             char[] dataValidade = data.ToCharArray();
-            if (ValidaTabulacao(dataValidade) || ValidaDias(dataValidade) || ValidaMeses(dataValidade) || ValidaAnos(dataValidade))
+            if (ValidaTabulacao(dataValidade) || ValidaDias(dataValidade) || ValidaMeses(dataValidade))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\n Data inválida! Tente novamente");
-                Console.ResetColor();
-
+                ExibirMensagem("\nData inválida! Tente novamente\n", ConsoleColor.Red);
                 data = Convert.ToString(RecebeData(texto));
             }
             return Convert.ToDateTime(data);
@@ -196,7 +187,14 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         public bool ValidaTabulacao(char[] dataValidade) => dataValidade.Length != 10 || dataValidade[2] != '/' || dataValidade[5] != '/';
         public bool ValidaDias(char[] dataValidade) => (dataValidade[0] != '0' && dataValidade[0] != '1' && dataValidade[0] != '2' && dataValidade[0] != '3') || (dataValidade[0] == '3' && dataValidade[1] != '0');
         public bool ValidaMeses(char[] dataValidade) => (dataValidade[3] != '0' && dataValidade[3] != '1') || (dataValidade[3] == '1' && dataValidade[4] != '0' && dataValidade[4] != '1' && dataValidade[4] != '2');
-        public bool ValidaAnos(char[] dataValidade) => (dataValidade[6] != '2' || dataValidade[7] != '0' || (dataValidade[8] != '0' && dataValidade[8] != '1' && dataValidade[8] != '2') || (dataValidade[8] == '2' && dataValidade[9] != '0' && dataValidade[9] != '1' && dataValidade[9] != '2' && dataValidade[9] != '3' && dataValidade[9] != '4'));
+        #endregion
+
+        #region Valida int
+        public void NaoEhNumero(ref string input, string texto)
+        {
+            ExibirMensagem("Não é um número!\n", ConsoleColor.Red);
+            input = Convert.ToString(RecebeInt(texto)); //Para garantir que, ao sair do loop, o método "RecebeInt" não vai puxar a "input" original (nula)
+        }
         #endregion
 
         #endregion

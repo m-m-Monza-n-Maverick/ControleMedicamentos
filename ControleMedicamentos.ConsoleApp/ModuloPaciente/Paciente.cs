@@ -17,9 +17,9 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificarNulo(ref erros, Nome, "nome");
-            VerificarNulo(ref erros, Telefone, "telefone");
-            VerificarNulo(ref erros, CartaoSus, "cartão SUS");
+            VerificaNulo(ref erros, Nome, "nome");
+            VerificaNulo(ref erros, Telefone, "telefone");
+            VerificaNulo(ref erros, CartaoSus, "cartão do SUS");
             return erros;
         }
     }

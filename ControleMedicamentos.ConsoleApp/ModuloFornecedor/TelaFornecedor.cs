@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentos.ConsoleApp.ModuloFuncionario;
+using System.Collections;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
 {
@@ -45,18 +46,33 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
                     fornecedor.Id, fornecedor.nome, fornecedor.cnpj, fornecedor.telefone
                 );
             }
-
-            Console.ReadKey(true);
-            Console.WriteLine();
+            if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
         }
 
         protected override EntidadeBase ObterRegistro()
         {
-            string nome = RecebeString("Digite o nome: ");
-            string telefone = RecebeString("Digite o telefone: ");
-            string cnpj = RecebeString("Digite o CNPJ: ");
+            string nome = "a", telefone = "a", cnpj = "a";
+            EntidadeBase novoFornecedor = new Fornecedor(nome, telefone, cnpj);
 
-            return new Fornecedor(nome, telefone, cnpj);
+            RecebePropriedade(ref nome, ref telefone, ref cnpj, ref novoFornecedor, ref nome, "Digite o nome: ");
+            RecebePropriedade(ref nome, ref telefone, ref cnpj, ref novoFornecedor, ref telefone, "Digite o telefone: ");
+            RecebePropriedade(ref nome, ref telefone, ref cnpj, ref novoFornecedor, ref cnpj, "Digite o CNPJ: ");
+
+            return novoFornecedor;
         }
+
+        private void RecebePropriedade(ref string nome, ref string telefone, ref string cnpj, ref EntidadeBase novoMedicamento, ref string propriedade, string texto)
+        {
+            ArrayList erros;
+            do
+            {
+                propriedade = RecebeString(texto);
+                novoMedicamento = new Fornecedor(nome, telefone, cnpj);
+                erros = novoMedicamento.Validar();
+                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+            }
+            while (erros.Count != 0);
+        }
+
     }
 }

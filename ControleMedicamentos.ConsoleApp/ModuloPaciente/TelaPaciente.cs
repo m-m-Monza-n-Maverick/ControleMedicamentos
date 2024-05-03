@@ -1,4 +1,6 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
+using ControleMedicamentos.ConsoleApp.ModuloFuncionario;
+using System.Collections;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
 {
@@ -38,32 +40,33 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
                     paciente.Id, paciente.Nome, paciente.Telefone, paciente.CartaoSus
                 );
             }
-
-            Console.ReadLine();
-            Console.WriteLine();
+            if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
+            else Console.WriteLine();
         }
 
         protected override EntidadeBase ObterRegistro()
         {
-            Console.Write("Digite o nome do paciente: ");
-            string nome = Console.ReadLine();
+            string nome = "a", telefone = "a", cartaoSUS = "a";
+            EntidadeBase novoPaciente = new Paciente(nome, telefone, cartaoSUS);
 
-            Console.Write("Digite o telefone do paciente: ");
-            string telefone = Console.ReadLine();
-
-            Console.Write("Digite o cartão do SUS do paciente: ");
-            string cartaoSus = Console.ReadLine();
-
-            Paciente novoPaciente = new Paciente(nome, telefone, cartaoSus);
+            RecebePropriedade(ref nome, ref telefone, ref cartaoSUS, ref novoPaciente, ref nome, "Digite o nome: ");
+            RecebePropriedade(ref nome, ref telefone, ref cartaoSUS, ref novoPaciente, ref telefone, "Digite o telefone: ");
+            RecebePropriedade(ref nome, ref telefone, ref cartaoSUS, ref novoPaciente, ref cartaoSUS, "Digite o cartão SUS: ");
 
             return novoPaciente;
         }
 
-        public void CadastrarEntidadeTeste()
+        private void RecebePropriedade(ref string nome, ref string telefone, ref string cartaoSUS, ref EntidadeBase novoFuncionario, ref string propriedade, string texto)
         {
-            Paciente paciente = new Paciente("Bobby Tables", "49 9999-9521", "12321313122");
-
-            repositorio.Cadastrar(paciente);
+            ArrayList erros;
+            do
+            {
+                propriedade = RecebeString(texto);
+                novoFuncionario = new Paciente(nome, telefone, cartaoSUS);
+                erros = novoFuncionario.Validar();
+                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+            }
+            while (erros.Count != 0);
         }
     }
 }

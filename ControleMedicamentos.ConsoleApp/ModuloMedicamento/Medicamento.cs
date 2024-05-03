@@ -8,7 +8,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public string Lote { get; set; }
-        private DateTime DataValidade { get; set; }
+        protected DateTime DataValidade { get; set; }
         public int Quantidade { get; set; } = 5;
 
         public Medicamento(string nome, string descricao, string lote, DateTime dataValidade)
@@ -22,10 +22,10 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificarNulo(ref erros, Nome, "nome");
-            VerificarNulo(ref erros, Descricao, "descrição");
-            VerificarNulo(ref erros, Lote, "lote");
-            VerificaData(ref erros, DataValidade);
+            VerificaNulo(ref erros, Nome, "nome");
+            VerificaNulo(ref erros, Descricao, "descrição");
+            VerificaNulo(ref erros, Lote, "lote");
+            VerificaDataValidade(ref erros, DataValidade);
             return erros;
         }
     }
