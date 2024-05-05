@@ -4,7 +4,6 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
 {
     internal class Paciente : EntidadeBase
     {
-        public string Nome { get; set; }
         public string Telefone { get; set; }
         public string CartaoSus { get; set; }
 
@@ -17,7 +16,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificaNulo(ref erros, Nome, "nome");
+            VerificaNulo(ref erros, Nome, "Nome");
             VerificaNulo(ref erros, Telefone, "telefone");
             VerificaNulo(ref erros, CartaoSus, "cartão do SUS");
             return erros;

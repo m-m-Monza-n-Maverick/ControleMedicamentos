@@ -149,6 +149,61 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             }
             return Convert.ToDateTime(data);
         }
+        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref string atributo, string texto)
+        {
+            ArrayList erros;
+            do
+            {
+                atributo = RecebeString($"Digite o(a) {texto}: ");
+                funcao();
+                erros = novaEntidade.Validar();
+                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+            }
+            while (erros.Count != 0);
+        }
+        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref int atributo, string texto)
+        {
+            ArrayList erros;
+            do
+            {
+                atributo = RecebeInt($"Digite o(a) {texto}: ");
+                funcao();
+                erros = novaEntidade.Validar();
+                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+            }
+            while (erros.Count != 0);
+        }
+        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref DateTime atributo, string texto)
+        {
+            ArrayList erros;
+            do
+            {
+                atributo = RecebeData($"Digite o(a) {texto}: ");
+                funcao();
+                erros = novaEntidade.Validar();
+                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+            }
+            while (erros.Count != 0);
+        }
+        public void RecebeAtributo(Action funcao, Action atributo, ref EntidadeBase novaEntidade, ref EntidadeBase novoAtributo, TelaBase tela, string texto, ref int idEscolhido)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"{texto}s...");
+            tela.VisualizarRegistros(false);
+            Console.ResetColor();
+            ArrayList erros;
+
+            do
+            {
+                idEscolhido = RecebeInt($"Digite o ID do {texto} requisitado: ");
+                atributo();
+                funcao();
+                erros = novaEntidade.Validar();
+                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+            }
+            while (erros.Count != 0);
+        }
+
         #endregion
 
         #region Validações

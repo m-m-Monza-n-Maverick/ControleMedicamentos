@@ -6,12 +6,12 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
 {
     internal class RequisicaoSaida : EntidadeBase
     {
-        public Medicamento Medicamento { get; set; }
-        public Paciente Paciente { get; set; }
+        public EntidadeBase Medicamento { get; set; }
+        public EntidadeBase Paciente { get; set; }
         public DateTime DataRequisicao { get; set; }
         public int QuantidadeRetirada { get; set; }
 
-        public RequisicaoSaida(Medicamento medicamentoSelecionado, Paciente pacienteSelecionado, int quantidade)
+        public RequisicaoSaida(EntidadeBase medicamentoSelecionado, EntidadeBase pacienteSelecionado, int quantidade)
         {
             Medicamento = medicamentoSelecionado;
             Paciente = pacienteSelecionado;
@@ -22,8 +22,8 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificaNulo(ref erros, Medicamento, "medicamento");
-            VerificaNulo(ref erros, Paciente, "paciente");
+            VerificaNulo(ref erros, Medicamento);
+            VerificaNulo(ref erros, Paciente);
             VerificaNulo(ref erros, QuantidadeRetirada.ToString(), "quantidade");
             return erros;
         }
