@@ -57,100 +57,41 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
                     requisicaoEntrada.Id, 
                     requisicaoEntrada.dataRequisicaoEntrada, 
                     requisicaoEntrada.medicamento.Nome,
-                    requisicaoEntrada.fornecedor.nome, 
-                    requisicaoEntrada.funcionario.nome, 
+                    requisicaoEntrada.fornecedor.Nome, 
+                    requisicaoEntrada.funcionario.Nome, 
                     requisicaoEntrada.quantidadeRequisitada );
             }
 
             if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
             else Console.WriteLine();
         }
-
         protected override EntidadeBase ObterRegistro()
         {
-            Medicamento medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(1);
-            Fornecedor fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(1);
-            Funcionario funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(1);
+            int quantidade = 0, idEscolhido = 0;
             DateTime dataRequisicaoEntrada = DateTime.Now;
-            int quantidade = 0;
-            ArrayList erros;
+
+            EntidadeBase medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(1);
+            EntidadeBase fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(1);
+            EntidadeBase funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(1);
             EntidadeBase novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
 
-            RecebePropriedade(dataRequisicaoEntrada, ref medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade, ref novaRequisicaoEntrada, "Digite o ID do medicamento requisitado: ");
-            ExibirMensagem($"Medicamento selecionado: {medicamentoSelecionado.Nome}\n", ConsoleColor.Cyan);
+            RecebeAtributo(
+                () => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade),
+                () => medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idEscolhido),
+                ref novaRequisicaoEntrada, ref medicamentoSelecionado, telaMedicamento, "medicamento", ref idEscolhido);
+            
+            RecebeAtributo(
+                () => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade),
+                () => fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(idEscolhido),
+                ref novaRequisicaoEntrada, ref fornecedorSelecionado, telaFornecedor, "fornecedor", ref idEscolhido);
 
-            RecebePropriedade(dataRequisicaoEntrada, medicamentoSelecionado, ref fornecedorSelecionado, funcionarioSelecionado, quantidade, ref novaRequisicaoEntrada, "\nDigite o ID do medicamento requisitado: ");
-            ExibirMensagem($"Fornecedor selecionado: {fornecedorSelecionado.nome}\n", ConsoleColor.Cyan);
+            RecebeAtributo(
+                () => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade),
+                () => funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(idEscolhido),
+                ref novaRequisicaoEntrada, ref funcionarioSelecionado, telaFuncionario, "funcionario", ref idEscolhido);
 
-            RecebePropriedade(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, ref funcionarioSelecionado, quantidade, ref novaRequisicaoEntrada, "\nDigite o ID do medicamento requisitado: ");
-            ExibirMensagem($"Funcionario selecionado: {funcionarioSelecionado.nome}\n", ConsoleColor.Cyan);
-
-            RecebePropriedade(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, ref quantidade, ref novaRequisicaoEntrada, ref quantidade, "\nDigite o ID do medicamento requisitado: ");
+            RecebeAtributo(() => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade), ref novaRequisicaoEntrada, ref quantidade, "quantidade");
             return novaRequisicaoEntrada;
-        }
-
-        private void RecebePropriedade(DateTime dataRequisicaoEntrada, ref Medicamento medicamentoSelecionado, Fornecedor fornecedorSelecionado, Funcionario funcionarioSelecionado, int quantidade, ref EntidadeBase novaRequisicaoEntrada, string texto)
-        {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("Medicamentos...");
-            telaMedicamento.VisualizarRegistros(false);
-            Console.ResetColor();
-            ArrayList erros;
-            do
-            {
-                int idMedicamento = RecebeInt(texto);
-                medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idMedicamento);
-                novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
-                erros = novaRequisicaoEntrada.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
-            }
-            while (erros.Count != 0);
-        }
-        private void RecebePropriedade(DateTime dataRequisicaoEntrada, Medicamento medicamentoSelecionado, ref Fornecedor fornecedorSelecionado, Funcionario funcionarioSelecionado, int quantidade, ref EntidadeBase novaRequisicaoEntrada, string texto)
-        {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("\nFornecedores...");
-            telaFornecedor.VisualizarRegistros(false);
-            Console.ResetColor();
-            ArrayList erros;
-            do
-            {
-                int id = RecebeInt(texto);
-                fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(id);
-                novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
-                erros = novaRequisicaoEntrada.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
-            }
-            while (erros.Count != 0);
-        }
-        private void RecebePropriedade(DateTime dataRequisicaoEntrada, Medicamento medicamentoSelecionado, Fornecedor fornecedorSelecionado, ref Funcionario funcionarioSelecionado, int quantidade, ref EntidadeBase novaRequisicaoEntrada, string texto)
-        {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("\nFuncionarios...");
-            telaFuncionario.VisualizarRegistros(false);
-            Console.ResetColor();
-            ArrayList erros;
-            do
-            {
-                int id = RecebeInt(texto);
-                funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(id);
-                novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
-                erros = novaRequisicaoEntrada.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
-            }
-            while (erros.Count != 0);
-        }
-        private void RecebePropriedade(DateTime dataRequisicaoEntrada, Medicamento medicamentoSelecionado, Fornecedor fornecedorSelecionado, Funcionario funcionarioSelecionado, ref int quantidade, ref EntidadeBase novaRequisicaoEntrada, ref int propriedade, string texto)
-        {
-            ArrayList erros;
-            do
-            {
-                propriedade = RecebeInt(texto);
-                novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
-                erros = novaRequisicaoEntrada.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
-            }
-            while (erros.Count != 0);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentos.ConsoleApp.ModuloFuncionario;
 using System.Collections;
+using ControleMedicamentos.ConsoleApp.ModuloPaciente;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
 {
@@ -17,7 +18,6 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             this.repositorio = repositorio;
             tipoEntidade = nome;
         }
-
         public override void VisualizarRegistros(bool exibirTitulo)
         {
             if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
@@ -36,36 +36,21 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
 
                 Console.WriteLine(
                     "{0, -10} | {1, -20} | {2, -20} | {3, -20}",
-                    fornecedor.Id, fornecedor.nome, fornecedor.cnpj, fornecedor.telefone
+                    fornecedor.Id, fornecedor.Nome, fornecedor.cnpj, fornecedor.telefone
                 );
             }
             if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
         }
-
         protected override EntidadeBase ObterRegistro()
         {
             string nome = "a", telefone = "a", cnpj = "a";
             EntidadeBase novoFornecedor = new Fornecedor(nome, telefone, cnpj);
 
-            RecebePropriedade(ref nome, ref telefone, ref cnpj, ref novoFornecedor, ref nome, "Digite o nome: ");
-            RecebePropriedade(ref nome, ref telefone, ref cnpj, ref novoFornecedor, ref telefone, "Digite o telefone: ");
-            RecebePropriedade(ref nome, ref telefone, ref cnpj, ref novoFornecedor, ref cnpj, "Digite o CNPJ: ");
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref nome, "Nome");
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref telefone, "telefone");
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref cnpj, "CNPJ");
 
             return novoFornecedor;
         }
-
-        private void RecebePropriedade(ref string nome, ref string telefone, ref string cnpj, ref EntidadeBase novoMedicamento, ref string propriedade, string texto)
-        {
-            ArrayList erros;
-            do
-            {
-                propriedade = RecebeString(texto);
-                novoMedicamento = new Fornecedor(nome, telefone, cnpj);
-                erros = novoMedicamento.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
-            }
-            while (erros.Count != 0);
-        }
-
     }
 }

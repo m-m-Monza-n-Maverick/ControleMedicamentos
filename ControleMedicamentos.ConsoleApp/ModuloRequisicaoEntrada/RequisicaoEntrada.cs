@@ -16,14 +16,10 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
     {
         public DateTime dataRequisicaoEntrada;
 
-        public Medicamento medicamento;
-
-        public Fornecedor fornecedor;
-
-        public Funcionario funcionario;
+        public EntidadeBase medicamento, fornecedor, funcionario;
 
         public int quantidadeRequisitada;
-        public RequisicaoEntrada(DateTime dataRequisicaoEntrada, Medicamento medicamento,Fornecedor fornecedor, Funcionario funcionario, int quantidadeRequisitada)
+        public RequisicaoEntrada(DateTime dataRequisicaoEntrada, EntidadeBase medicamento,EntidadeBase fornecedor, EntidadeBase funcionario, int quantidadeRequisitada)
         {
             this.dataRequisicaoEntrada = dataRequisicaoEntrada;
             this.medicamento = medicamento;
@@ -35,9 +31,9 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();
-            VerificaNulo(ref erros, medicamento, "medicamento");
-            VerificaNulo(ref erros, fornecedor, "fornecedor");
-            VerificaNulo(ref erros, funcionario, "funcionário");
+            VerificaNulo(ref erros, medicamento);
+            VerificaNulo(ref erros, fornecedor);
+            VerificaNulo(ref erros, funcionario);
             VerificaNulo(ref erros, quantidadeRequisitada.ToString(), "quantidade");
             return erros;
         }

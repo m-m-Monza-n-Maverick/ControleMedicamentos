@@ -1,5 +1,6 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
+using ControleMedicamentos.ConsoleApp.ModuloPaciente;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,35 +32,21 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
                 if (funcionario == null) continue;
 
                 Console.WriteLine("{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}",
-                    funcionario.Id, funcionario.nome, funcionario.cpf, funcionario.login, funcionario.senha);
+                    funcionario.Id, funcionario.Nome, funcionario.cpf, funcionario.login, funcionario.senha);
             }
             if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
         }
-
         protected override EntidadeBase ObterRegistro()
         {
             string nome = "a", cpf = "a", login = "a", senha = "a";
             EntidadeBase novoFuncionario = new Funcionario(nome, cpf, login, senha);
 
-            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref nome, "Digite o nome: ");
-            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref cpf, "Digite o CPF: ");
-            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref login, "Digite o login: ");
-            RecebePropriedade(ref nome, ref cpf, ref login, ref senha, ref novoFuncionario, ref senha, "Digite a senha: ");
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref nome, "Nome");
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref cpf, "CPF");
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref login, "login");
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref senha, "senha");
 
-            return new Funcionario(nome, cpf, login, senha);
-        }
-
-        private void RecebePropriedade(ref string nome, ref string cpf, ref string login, ref string senha, ref EntidadeBase novoFuncionario, ref string propriedade, string texto)
-        {
-            ArrayList erros;
-            do
-            {
-                propriedade = RecebeString(texto);
-                novoFuncionario = new Funcionario(nome, cpf, login, senha);
-                erros = novoFuncionario.Validar();
-                if (erros.Count != 0) ApresentarErros(erros);
-            }
-            while (erros.Count != 0);
+            return novoFuncionario;
         }
     }
 }

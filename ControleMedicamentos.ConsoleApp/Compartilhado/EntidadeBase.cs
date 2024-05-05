@@ -3,6 +3,8 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
     internal abstract class EntidadeBase
     {
+        public string Nome { get; set; }
+        public int Quantidade { get; set; } = 5;
         public int Id { get; set; }
 
         public abstract ArrayList Validar();
@@ -12,7 +14,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             if (string.IsNullOrEmpty(campoTestado))
                 erros.Add($"\nO campo \"{mostraCampo}\" é obrigatório. Tente novamente");
         }
-        protected void VerificaNulo(ref ArrayList erros, EntidadeBase campoTestado, string mostraCampo)
+        protected void VerificaNulo(ref ArrayList erros, EntidadeBase campoTestado)
         {
             if (campoTestado == null)
                 erros.Add($"\nEste item não existe. Tente novamente");
