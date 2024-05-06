@@ -31,18 +31,29 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             }
 
             if (exibirTitulo) RecebeString("\n 'Enter' para continuar ");
-            else Console.WriteLine();
         }
         protected override EntidadeBase ObterRegistro()
         {
-            string nome = "a", telefone = "a", cartaoSUS = "a";
+            string nome = "-", telefone = "-", cartaoSUS = "-";
             EntidadeBase novoPaciente = new Paciente(nome, telefone, cartaoSUS);
 
-            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref nome, "Nome");
-            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref telefone, "telefone");
-            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref cartaoSUS, "cartão SUS");
+            TabelaDeCadastro ("{0, -10} | ", nome, telefone);
+            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref nome);
+
+            TabelaDeCadastro("{0, -10} | {1, -15} | ", nome, telefone);
+            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref telefone);
+
+            TabelaDeCadastro("{0, -10} | {1, -15} | {2, -15} | ", nome, telefone);
+            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref cartaoSUS);
 
             return novoPaciente;
+        }
+        protected override void TabelaDeCadastro(params string[] texto)
+        {
+            Console.Clear();
+            ApresentarCabecalhoEntidade($"Cadastrando novo paciente...\n");
+            Console.WriteLine("{0, -10} | {1, -15} | {2, -15} | {3, -15}", "Id", "Nome", "Telefone", "Cartão do SUS");
+            Console.Write(texto[0], repositorio.contadorId + 1, texto[1], texto[2]);
         }
     }
 }

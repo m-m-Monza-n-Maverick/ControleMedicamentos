@@ -43,14 +43,26 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
         }
         protected override EntidadeBase ObterRegistro()
         {
-            string nome = "a", telefone = "a", cnpj = "a";
+            string nome = "-", telefone = "-", cnpj = "-";
             EntidadeBase novoFornecedor = new Fornecedor(nome, telefone, cnpj);
+            
+            TabelaDeCadastro("{0, -10} | ", nome, telefone);
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref nome);
 
-            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref nome, "Nome");
-            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref telefone, "telefone");
-            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref cnpj, "CNPJ");
+            TabelaDeCadastro("{0, -10} | {1, -20} | ", nome, telefone);
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref telefone);
+
+            TabelaDeCadastro("{0, -10} | {1, -20} | {2, -20}| ", nome, telefone);
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref cnpj);
 
             return novoFornecedor;
+        }
+        protected override void TabelaDeCadastro(params string[] texto)
+        {
+            Console.Clear();
+            ApresentarCabecalhoEntidade($"Cadastrando novo fornecedor...\n");
+            Console.WriteLine("{0, -10} | {1, -20} | {2, -20}| {3, -20}", "Id", "Nome", "Telefone", "CNPJ");
+            Console.Write(texto[0], repositorio.contadorId + 1, texto[1], texto[2]);
         }
     }
 }
