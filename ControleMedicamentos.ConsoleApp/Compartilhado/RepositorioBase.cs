@@ -3,7 +3,7 @@
     internal abstract class RepositorioBase
     {
         private EntidadeBase[] registros = new EntidadeBase[100];
-        private int contadorId = 0;
+        public int contadorId = 0;
 
         public void Cadastrar(EntidadeBase novoRegistro)
         {

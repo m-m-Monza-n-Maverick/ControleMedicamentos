@@ -40,8 +40,6 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         }
         public virtual void Registrar()
         {
-            ApresentarCabecalhoEntidade($"Cadastrando {tipoEntidade}...\n");
-
             EntidadeBase entidade = ObterRegistro();
             RealizaAcao(() => repositorio.Cadastrar(entidade), "cadastrado");
         }
@@ -52,7 +50,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             {
                 if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
 
-                ApresentarCabecalhoEntidade($"Editando {tipoEntidade}...\n");
+                ApresentarCabecalhoEntidade($"\nEditando {tipoEntidade}...\n");
                 VisualizarRegistros(false);
 
                 int idEntidadeEscolhida = RecebeInt($"Digite o ID do {tipoEntidade} que deseja editar: ");
@@ -70,7 +68,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         {
             while(true)
             {
-                ApresentarCabecalhoEntidade($"Excluindo {tipoEntidade}...\n");
+                ApresentarCabecalhoEntidade($"\nExcluindo {tipoEntidade}...\n");
                 VisualizarRegistros(false);
 
                 int idRegistroEscolhido = RecebeInt($"Digite o ID do {tipoEntidade} que deseja excluir: ");
@@ -110,8 +108,8 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         protected void ApresentarErros(ArrayList erros)
         {
             foreach (string erro in erros) ExibirMensagem(erro, ConsoleColor.Red);
-            Console.WriteLine();
         }
+        protected virtual void TabelaDeCadastro(params string[] texto) { }
         public void ExibirMensagem(string mensagem, ConsoleColor cor)
         {
             Console.ForegroundColor = cor;
@@ -149,12 +147,12 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             }
             return Convert.ToDateTime(data);
         }
-        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref string atributo, string texto)
+        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref string atributo)
         {
             ArrayList erros;
             do
             {
-                atributo = RecebeString($"Digite o(a) {texto}: ");
+                atributo = Console.ReadLine();
                 funcao();
                 erros = novaEntidade.Validar();
                 if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
@@ -166,7 +164,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             ArrayList erros;
             do
             {
-                atributo = RecebeInt($"Digite o(a) {texto}: ");
+                atributo = RecebeInt("");
                 funcao();
                 erros = novaEntidade.Validar();
                 if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
@@ -178,7 +176,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             ArrayList erros;
             do
             {
-                atributo = RecebeData($"Digite o(a) {texto}: ");
+                atributo = RecebeData("");
                 funcao();
                 erros = novaEntidade.Validar();
                 if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
@@ -188,14 +186,14 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         public void RecebeAtributo(Action funcao, Action atributo, ref EntidadeBase novaEntidade, ref EntidadeBase novoAtributo, TelaBase tela, string texto, ref int idEscolhido)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine($"{texto}s...");
+            Console.WriteLine($"\n\n{texto}s...");
             tela.VisualizarRegistros(false);
             Console.ResetColor();
             ArrayList erros;
 
             do
             {
-                idEscolhido = RecebeInt($"Digite o ID do {texto} requisitado: ");
+                idEscolhido = RecebeInt($"\nDigite o ID do {texto} requisitado: ");
                 atributo();
                 funcao();
                 erros = novaEntidade.Validar();

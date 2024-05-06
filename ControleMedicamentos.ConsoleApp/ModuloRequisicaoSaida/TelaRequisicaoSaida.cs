@@ -39,7 +39,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
             if (!repositorio.ExistemItensCadastrados()) { RepositorioVazio(); return; }
             if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando Requisições de Saída...\n");
 
-            Console.WriteLine( "{0, -10} | {1, -15} | {2, -15} | {3, -20} | {4, -5}",
+            Console.WriteLine( "{0, -5} | {1, -15} | {2, -15} | {3, -20} | {4, -5}",
                 "Id", "Medicamento", "Paciente", "Data de Requisição", "Quantidade" );
 
             EntidadeBase[] requisicoesCadastradas = repositorio.SelecionarTodos();
@@ -49,7 +49,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
                 if (requisicao == null) continue;
 
                 Console.WriteLine(
-                    "{0, -10} | {1, -15} | {2, -15} | {3, -20} | {4, -5}",
+                    "{0, -5} | {1, -15} | {2, -15} | {3, -20} | {4, -5}",
                     requisicao.Id,
                     requisicao.Medicamento.Nome,
                     requisicao.Paciente.Nome,
@@ -58,7 +58,6 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
             }
 
             if (exibirTitulo) RecebeString("\n'Enter' para continuar ");
-            else Console.WriteLine();
         }
         protected override EntidadeBase ObterRegistro()
         {
@@ -68,20 +67,30 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
             EntidadeBase pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(1);
             EntidadeBase novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade);
 
+            TabelaDeCadastro("{0, -5} | ", medicamentoSelecionado.Nome, pacienteSelecionado.Nome);
             RecebeAtributo(
                 () => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade),
                 () => medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idEscolhido),
                 ref novaRequisicaoSaida, ref medicamentoSelecionado, telaMedicamento, "medicamento", ref idEscolhido);
             //ExibirMensagem($"Medicamento selecionado: {medicamentoSelecionado.Nome}\n", ConsoleColor.Cyan);
-
+            
+            TabelaDeCadastro("{0, -5} | {1, -10}  | ", medicamentoSelecionado.Nome, pacienteSelecionado.Nome);
             RecebeAtributo(
                 () => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade),
                 () => pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(idEscolhido),
                 ref novaRequisicaoSaida, ref pacienteSelecionado, telaPaciente, "paciente", ref idEscolhido);
             //ExibirMensagem($"Propriedade selecionado: {pacienteSelecionado.Nome}\n", ConsoleColor.Cyan);
 
+            TabelaDeCadastro("{0, -5} | {1, -10}  | {2, -10} | ", medicamentoSelecionado.Nome, pacienteSelecionado.Nome);
             RecebeAtributo(() => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade), ref novaRequisicaoSaida, ref quantidade, "quantidade");
             return novaRequisicaoSaida;
+        }
+        protected override void TabelaDeCadastro(params string[] texto)
+        {
+            Console.Clear();
+            ApresentarCabecalhoEntidade($"Cadastrando requisição de saída...\n");
+            Console.WriteLine("{0, -5} | {1, -10} | {2, -10} | {3, -5}", "Id", "Medicamento", "Paciente", "Quantidade");
+            Console.Write(texto[0], repositorio.contadorId + 1, texto[1], texto[2]);
         }
     }
 }

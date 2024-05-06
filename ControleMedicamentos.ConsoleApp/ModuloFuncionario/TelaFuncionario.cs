@@ -38,15 +38,29 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
         }
         protected override EntidadeBase ObterRegistro()
         {
-            string nome = "a", cpf = "a", login = "a", senha = "a";
+            string nome = "-", cpf = "-", login = "-", senha = "-";
             EntidadeBase novoFuncionario = new Funcionario(nome, cpf, login, senha);
 
-            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref nome, "Nome");
-            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref cpf, "CPF");
-            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref login, "login");
-            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref senha, "senha");
+            TabelaDeCadastro ("{0, -5} | ", nome, cpf, login);
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref nome);
+
+            TabelaDeCadastro("{0, -5} | {1, -15} | ", nome, cpf, login);
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref cpf);
+
+            TabelaDeCadastro("{0, -5} | {1, -15} | {2, -15} | ", nome, cpf, login);
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref login);
+
+            TabelaDeCadastro("{0, -5} | {1, -15} | {2, -15} | {3, -15} | ", nome, cpf, login);
+            RecebeAtributo(() => novoFuncionario = new Funcionario(nome, cpf, login, senha), ref novoFuncionario, ref senha);
 
             return novoFuncionario;
+        }
+        protected override void TabelaDeCadastro(params string[] texto)
+        {
+            Console.Clear();
+            ApresentarCabecalhoEntidade($"Cadastrando novo funcionario...\n");
+            Console.WriteLine("{0, -5} | {1, -15} | {2, -15} | {3, -15} | {4, -10}", "Id", "Nome", "CPF", "Login", "Senha");
+            Console.Write(texto[0], repositorio.contadorId + 1, texto[1], texto[2], texto[3]);
         }
     }
 }
