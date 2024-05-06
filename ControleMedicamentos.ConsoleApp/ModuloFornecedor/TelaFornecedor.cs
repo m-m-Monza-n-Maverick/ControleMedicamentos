@@ -46,14 +46,14 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             string nome = "-", telefone = "-", cnpj = "-";
             EntidadeBase novoFornecedor = new Fornecedor(nome, telefone, cnpj);
             
-            TabelaDeCadastro("{0, -10} | ", nome, telefone);
-            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref nome);
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref nome,
+                () => TabelaDeCadastro("{0, -10} | ", nome, telefone));
 
-            TabelaDeCadastro("{0, -10} | {1, -20} | ", nome, telefone);
-            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref telefone);
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref telefone,
+                () => TabelaDeCadastro("{0, -10} | {1, -20} | ", nome, telefone));
 
-            TabelaDeCadastro("{0, -10} | {1, -20} | {2, -20}| ", nome, telefone);
-            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref cnpj);
+            RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref cnpj,
+                () => TabelaDeCadastro("{0, -10} | {1, -20} | {2, -20}| ", nome, telefone));
 
             return novoFornecedor;
         }
