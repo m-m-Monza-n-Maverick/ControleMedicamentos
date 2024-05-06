@@ -36,6 +36,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
             {
                 RequisicaoEntrada entidade = (RequisicaoEntrada)ObterRegistro();
                 RealizaAcao(() => repositorio.Cadastrar(entidade), "cadastrado");
+                entidade.AcrescentarMedicamento();
             }
         }
         public override void VisualizarRegistros(bool exibirTitulo)

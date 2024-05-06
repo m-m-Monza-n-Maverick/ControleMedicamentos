@@ -37,5 +37,6 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
             VerificaNulo(ref erros, quantidadeRequisitada.ToString(), "quantidade");
             return erros;
         }
+        public void AcrescentarMedicamento() => medicamento.Quantidade += quantidadeRequisitada;
     }
 }
