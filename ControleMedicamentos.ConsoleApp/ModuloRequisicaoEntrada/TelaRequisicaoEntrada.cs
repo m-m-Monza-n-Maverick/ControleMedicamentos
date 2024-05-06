@@ -77,7 +77,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
             TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20} | ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
             RecebeAtributo(novaRequisicao, funcionario, ref novaRequisicaoEntrada, ref funcionarioSelecionado, telaFuncionario, "funcionario", ref idEscolhido);
 
-            RecebeAtributo(novaRequisicao, ref novaRequisicaoEntrada, ref quantidade,
+            RecebeAtributo(() => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade), ref novaRequisicaoEntrada, ref quantidade,
                 () => TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20} | {3, -20} | ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome));
 
             return novaRequisicaoEntrada;

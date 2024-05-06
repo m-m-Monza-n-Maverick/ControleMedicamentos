@@ -3,7 +3,6 @@ using ControleMedicamentos.ConsoleApp.ModuloFuncionario;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-
 namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
 {
     internal class TelaMedicamento : TelaBase
