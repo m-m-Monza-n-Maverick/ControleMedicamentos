@@ -15,7 +15,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         static TelaFornecedor telaFornecedor = new TelaFornecedor(new RepositorioFornecedor(), "fornecedor");
         TelaRequisicaoSaida telaRequisicaoSaida = new TelaRequisicaoSaida(telaPaciente, telaMedicamento, new RepositorioRequisicaoSaida(), "requisição saída");
         TelaRequisicaoEntrada telaRequisicaoEntrada = new TelaRequisicaoEntrada(telaMedicamento, telaFornecedor, telaFuncionario, new RepositorioRequisicaoEntrada(), "requisição entrada");
-            
+
         public void MenuPrincipal(ref bool sair)
         {
             Console.Clear();

@@ -24,7 +24,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando fornecedores...");
 
             Console.WriteLine(
-                "{0, -10} | {1, -20} | {2, -20}| {3, -20}",
+                "{0, -10} | {1, -20} | {2, -20} | {3, -20}",
                 "Id", "Nome", "CNPJ", "Telefone" );
 
             EntidadeBase[] fornecedoresCadastrados = repositorio.SelecionarTodos();
@@ -53,7 +53,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
                 () => TabelaDeCadastro("{0, -10} | {1, -20} | ", nome, telefone));
 
             RecebeAtributo(() => novoFornecedor = new Fornecedor(nome, telefone, cnpj), ref novoFornecedor, ref cnpj,
-                () => TabelaDeCadastro("{0, -10} | {1, -20} | {2, -20}| ", nome, telefone));
+                () => TabelaDeCadastro("{0, -10} | {1, -20} | {2, -20} | ", nome, telefone));
 
             return novoFornecedor;
         }
@@ -61,7 +61,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
         {
             Console.Clear();
             ApresentarCabecalhoEntidade($"Cadastrando novo fornecedor...\n");
-            Console.WriteLine("{0, -10} | {1, -20} | {2, -20}| {3, -20}", "Id", "Nome", "Telefone", "CNPJ");
+            Console.WriteLine("{0, -10} | {1, -20} | {2, -20} | {3, -20}", "Id", "Nome", "Telefone", "CNPJ");
             Console.Write(texto[0], repositorio.contadorId + 1, texto[1], texto[2]);
         }
     }
