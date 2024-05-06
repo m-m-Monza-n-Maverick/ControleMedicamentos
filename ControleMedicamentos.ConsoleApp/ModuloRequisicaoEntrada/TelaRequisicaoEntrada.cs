@@ -44,7 +44,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
             if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando requisições de entrada...\n");
 
             Console.WriteLine(
-                "{0, -5}| {1, -20}| {2, -20}| {3, -20}| {4, -20}| {5, -20}",
+                "{0, -5} | {1, -20} | {2, -20} | {3, -20} | {4, -20} | {5, -20}",
                 "Id", "Data Requisição", "Medicamento", "Fornecedor", "Funcionário", "Quantidade" );
 
             EntidadeBase[] requisicoesEntradaCadastradas = repositorio.SelecionarTodos();
@@ -53,7 +53,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
                 if (requisicaoEntrada == null) continue;
 
                 Console.WriteLine(
-                    "{0, -5} | {1, -20} | {2, -20} | {3, -20}| {4, -20}| {5, -20}",
+                    "{0, -5} | {1, -20} | {2, -20} | {3, -20} | {4, -20} | {5, -20}",
                     requisicaoEntrada.Id, 
                     requisicaoEntrada.dataRequisicaoEntrada.ToString("d"), 
                     requisicaoEntrada.medicamento.Nome,
@@ -74,11 +74,11 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
             TabelaDeCadastro("{0, -5} | {1, -20} | ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
             RecebeAtributo(novaRequisicao, fornecedor, ref novaRequisicaoEntrada, ref fornecedorSelecionado, telaFornecedor, "fornecedor", ref idEscolhido);
 
-            TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20}| ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
+            TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20} | ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
             RecebeAtributo(novaRequisicao, funcionario, ref novaRequisicaoEntrada, ref funcionarioSelecionado, telaFuncionario, "funcionario", ref idEscolhido);
 
             RecebeAtributo(novaRequisicao, ref novaRequisicaoEntrada, ref quantidade,
-                () => TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20}| {3, -20}| ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome));
+                () => TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20} | {3, -20} | ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome));
 
             return novaRequisicaoEntrada;
         }
@@ -104,7 +104,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
         {
             Console.Clear();
             ApresentarCabecalhoEntidade($"Cadastrando requisição de entrada...\n");
-            Console.WriteLine("{0, -5} | {1, -20} | {2, -20}| {3, -20}| {4, -20}", "Id", "Medicamento", "Fornecedor", "Funcionário", "Quantidade");
+            Console.WriteLine("{0, -5} | {1, -20} | {2, -20} | {3, -20} | {4, -20}", "Id", "Medicamento", "Fornecedor", "Funcionário", "Quantidade");
             Console.Write(texto[0], repositorio.contadorId + 1, texto[1], texto[2], texto[3]);
         }
     }
