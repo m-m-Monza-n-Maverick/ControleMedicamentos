@@ -37,14 +37,14 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             string nome = "-", telefone = "-", cartaoSUS = "-";
             EntidadeBase novoPaciente = new Paciente(nome, telefone, cartaoSUS);
 
-            TabelaDeCadastro ("{0, -10} | ", nome, telefone);
-            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref nome);
+            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref nome,
+                () => TabelaDeCadastro("{0, -10} | ", nome, telefone));
 
-            TabelaDeCadastro("{0, -10} | {1, -15} | ", nome, telefone);
-            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref telefone);
+            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref telefone,
+                () => TabelaDeCadastro("{0, -10} | {1, -15} | ", nome, telefone));
 
-            TabelaDeCadastro("{0, -10} | {1, -15} | {2, -15} | ", nome, telefone);
-            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref cartaoSUS);
+            RecebeAtributo(() => novoPaciente = new Paciente(nome, telefone, cartaoSUS), ref novoPaciente, ref cartaoSUS, 
+                () => TabelaDeCadastro("{0, -10} | {1, -15} | {2, -15} | ", nome, telefone));
 
             return novoPaciente;
         }

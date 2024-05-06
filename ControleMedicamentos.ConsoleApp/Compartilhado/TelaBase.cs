@@ -108,6 +108,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         protected void ApresentarErros(ArrayList erros)
         {
             foreach (string erro in erros) ExibirMensagem(erro, ConsoleColor.Red);
+            Console.ReadKey(true);
         }
         protected virtual void TabelaDeCadastro(params string[] texto) { }
         public void ExibirMensagem(string mensagem, ConsoleColor cor)
@@ -147,11 +148,12 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             }
             return Convert.ToDateTime(data);
         }
-        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref string atributo)
+        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref string atributo, Action tabelaCadastro)
         {
             ArrayList erros;
             do
             {
+                tabelaCadastro();
                 atributo = Console.ReadLine();
                 funcao();
                 erros = novaEntidade.Validar();
@@ -159,11 +161,12 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             }
             while (erros.Count != 0);
         }
-        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref int atributo, string texto)
+        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref int atributo, Action tabelaCadastro)
         {
             ArrayList erros;
             do
             {
+                tabelaCadastro();
                 atributo = RecebeInt("");
                 funcao();
                 erros = novaEntidade.Validar();
@@ -171,11 +174,12 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             }
             while (erros.Count != 0);
         }
-        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref DateTime atributo, string texto)
+        public void RecebeAtributo(Action funcao, ref EntidadeBase novaEntidade, ref DateTime atributo, Action tabelaCadastro)
         {
             ArrayList erros;
             do
             {
+                tabelaCadastro();
                 atributo = RecebeData("");
                 funcao();
                 erros = novaEntidade.Validar();
@@ -193,7 +197,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
 
             do
             {
-                idEscolhido = RecebeInt($"\nDigite o ID do {texto} requisitado: ");
+                idEscolhido = RecebeInt($"\nDigite o ID do {texto}: ");
                 atributo();
                 funcao();
                 erros = novaEntidade.Validar();

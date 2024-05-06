@@ -61,29 +61,35 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
         }
         protected override EntidadeBase ObterRegistro()
         {
-            int quantidade = 0, idEscolhido = 0;
-
-            EntidadeBase medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(1);
-            EntidadeBase pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(1);
-            EntidadeBase novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade);
+            GeraOsAtributos(out int quantidade, out int idEscolhido, out EntidadeBase medicamentoSelecionado, out EntidadeBase pacienteSelecionado, out EntidadeBase novaRequisicaoSaida);
+            GeraAsFuncoes(quantidade, idEscolhido, medicamentoSelecionado, pacienteSelecionado, novaRequisicaoSaida, out Action medicamento, out Action paciente, out Action novaRequisicao);
 
             TabelaDeCadastro("{0, -5} | ", medicamentoSelecionado.Nome, pacienteSelecionado.Nome);
-            RecebeAtributo(
-                () => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade),
-                () => medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idEscolhido),
-                ref novaRequisicaoSaida, ref medicamentoSelecionado, telaMedicamento, "medicamento", ref idEscolhido);
+            RecebeAtributo(novaRequisicao, medicamento, ref novaRequisicaoSaida, ref medicamentoSelecionado, telaMedicamento, "medicamento", ref idEscolhido);
             //ExibirMensagem($"Medicamento selecionado: {medicamentoSelecionado.Nome}\n", ConsoleColor.Cyan);
-            
+
             TabelaDeCadastro("{0, -5} | {1, -10}  | ", medicamentoSelecionado.Nome, pacienteSelecionado.Nome);
-            RecebeAtributo(
-                () => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade),
-                () => pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(idEscolhido),
-                ref novaRequisicaoSaida, ref pacienteSelecionado, telaPaciente, "paciente", ref idEscolhido);
+            RecebeAtributo(novaRequisicao, paciente, ref novaRequisicaoSaida, ref pacienteSelecionado, telaPaciente, "paciente", ref idEscolhido);
             //ExibirMensagem($"Propriedade selecionado: {pacienteSelecionado.Nome}\n", ConsoleColor.Cyan);
 
-            TabelaDeCadastro("{0, -5} | {1, -10}  | {2, -10} | ", medicamentoSelecionado.Nome, pacienteSelecionado.Nome);
-            RecebeAtributo(() => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade), ref novaRequisicaoSaida, ref quantidade, "quantidade");
+            RecebeAtributo(() => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade), ref novaRequisicaoSaida, ref quantidade,
+                () => TabelaDeCadastro("{0, -5} | {1, -10}  | {2, -10} | ", medicamentoSelecionado.Nome, pacienteSelecionado.Nome));
+
             return novaRequisicaoSaida;
+        }
+        private void GeraOsAtributos(out int quantidade, out int idEscolhido, out EntidadeBase medicamentoSelecionado, out EntidadeBase pacienteSelecionado, out EntidadeBase novaRequisicaoSaida)
+        {
+            quantidade = 0;
+            idEscolhido = 0;
+            medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(1);
+            pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(1);
+            novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade);
+        }
+        private void GeraAsFuncoes(int quantidade, int idEscolhido, EntidadeBase medicamentoSelecionado, EntidadeBase pacienteSelecionado, EntidadeBase novaRequisicaoSaida, out Action medicamento, out Action paciente, out Action novaRequisicao)
+        {
+            medicamento = () => medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idEscolhido);
+            paciente = () => pacienteSelecionado = (Paciente)telaPaciente.repositorio.SelecionarPorId(idEscolhido);
+            novaRequisicao = () => novaRequisicaoSaida = new RequisicaoSaida(medicamentoSelecionado, pacienteSelecionado, quantidade);
         }
         protected override void TabelaDeCadastro(params string[] texto)
         {

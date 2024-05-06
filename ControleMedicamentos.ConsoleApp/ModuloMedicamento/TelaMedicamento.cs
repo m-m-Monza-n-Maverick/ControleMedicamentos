@@ -36,17 +36,17 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
             DateTime dataValidade = DateTime.Now;
             EntidadeBase novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade);
             
-            TabelaDeCadastro("{0, -5} | ", nome, descricao, lote);
-            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref nome);
+            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref nome, 
+                () => TabelaDeCadastro("{0, -5} | ", nome, descricao, lote));
             
-            TabelaDeCadastro("{0, -5} | {1, -10} | ", nome, descricao, lote);
-            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref descricao);
-            
-            TabelaDeCadastro("{0, -5} | {1, -10} | {2, -15} | ", nome, descricao, lote);
-            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref lote);
+            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref descricao,
+                () => TabelaDeCadastro("{0, -5} | {1, -10} | ", nome, descricao, lote));
 
-            TabelaDeCadastro("{0, -5} | {1, -10} | {2, -15} | {3, -5} | ", nome, descricao, lote);
-            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref dataValidade, "data de validade");
+            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref lote,
+                () => TabelaDeCadastro("{0, -5} | {1, -10} | {2, -15} | ", nome, descricao, lote));
+            
+            RecebeAtributo(() => novoMedicamento = new Medicamento(nome, descricao, lote, dataValidade), ref novoMedicamento, ref dataValidade,
+                () => TabelaDeCadastro("{0, -5} | {1, -10} | {2, -15} | {3, -5} | ", nome, descricao, lote));
 
             return novoMedicamento;
         }

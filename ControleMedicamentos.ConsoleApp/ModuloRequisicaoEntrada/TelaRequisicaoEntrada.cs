@@ -44,7 +44,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
             if (exibirTitulo) ApresentarCabecalhoEntidade("Visualizando requisições de entrada...\n");
 
             Console.WriteLine(
-                "{0, -5} | {1, -20} | {2, -20}| {3, -20}| {4, -20}| {5, -20}",
+                "{0, -5}| {1, -20}| {2, -20}| {3, -20}| {4, -20}| {5, -20}",
                 "Id", "Data Requisição", "Medicamento", "Fornecedor", "Funcionário", "Quantidade" );
 
             EntidadeBase[] requisicoesEntradaCadastradas = repositorio.SelecionarTodos();
@@ -65,35 +65,40 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
         }
         protected override EntidadeBase ObterRegistro()
         {
-            int quantidade = 0, idEscolhido = 0;
-            DateTime dataRequisicaoEntrada = DateTime.Now;
-
-            EntidadeBase medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(1);
-            EntidadeBase fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(1);
-            EntidadeBase funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(1);
-            EntidadeBase novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
+            GeraOsAtributos(out int quantidade, out int idEscolhido, out DateTime dataRequisicaoEntrada, out EntidadeBase medicamentoSelecionado, out EntidadeBase fornecedorSelecionado, out EntidadeBase funcionarioSelecionado, out EntidadeBase novaRequisicaoEntrada);
+            GeraAsFuncoes(quantidade, idEscolhido, dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, novaRequisicaoEntrada, out Action medicamento, out Action fornecedor, out Action funcionario, out Action novaRequisicao);
 
             TabelaDeCadastro("{0, -5} | ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
-            RecebeAtributo(
-                () => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade),
-                () => medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idEscolhido),
-                ref novaRequisicaoEntrada, ref medicamentoSelecionado, telaMedicamento, "medicamento", ref idEscolhido);
+            RecebeAtributo(novaRequisicao, medicamento, ref novaRequisicaoEntrada, ref medicamentoSelecionado, telaMedicamento, "medicamento", ref idEscolhido);
 
             TabelaDeCadastro("{0, -5} | {1, -20} | ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
-            RecebeAtributo(
-                () => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade),
-                () => fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(idEscolhido),
-                ref novaRequisicaoEntrada, ref fornecedorSelecionado, telaFornecedor, "fornecedor", ref idEscolhido);
+            RecebeAtributo(novaRequisicao, fornecedor, ref novaRequisicaoEntrada, ref fornecedorSelecionado, telaFornecedor, "fornecedor", ref idEscolhido);
 
             TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20}| ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
-            RecebeAtributo(
-                () => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade),
-                () => funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(idEscolhido),
-                ref novaRequisicaoEntrada, ref funcionarioSelecionado, telaFuncionario, "funcionario", ref idEscolhido);
+            RecebeAtributo(novaRequisicao, funcionario, ref novaRequisicaoEntrada, ref funcionarioSelecionado, telaFuncionario, "funcionario", ref idEscolhido);
 
-            TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20}| {3, -20}| ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome);
-            RecebeAtributo(() => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade), ref novaRequisicaoEntrada, ref quantidade, "quantidade");
+            RecebeAtributo(novaRequisicao, ref novaRequisicaoEntrada, ref quantidade,
+                () => TabelaDeCadastro("{0, -5} | {1, -20} | {2, -20}| {3, -20}| ", medicamentoSelecionado.Nome, fornecedorSelecionado.Nome, funcionarioSelecionado.Nome));
+
             return novaRequisicaoEntrada;
+        }
+
+        public void GeraOsAtributos(out int quantidade, out int idEscolhido, out DateTime dataRequisicaoEntrada, out EntidadeBase medicamentoSelecionado, out EntidadeBase fornecedorSelecionado, out EntidadeBase funcionarioSelecionado, out EntidadeBase novaRequisicaoEntrada)
+        {
+            quantidade = 0;
+            idEscolhido = 0;
+            dataRequisicaoEntrada = DateTime.Now;
+            medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(1);
+            fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(1);
+            funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(1);
+            novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
+        }
+        private void GeraAsFuncoes(int quantidade, int idEscolhido, DateTime dataRequisicaoEntrada, EntidadeBase medicamentoSelecionado, EntidadeBase fornecedorSelecionado, EntidadeBase funcionarioSelecionado, EntidadeBase novaRequisicaoEntrada, out Action medicamento, out Action fornecedor, out Action funcionario, out Action novaRequisicao)
+        {
+            medicamento = () => medicamentoSelecionado = (Medicamento)telaMedicamento.repositorio.SelecionarPorId(idEscolhido);
+            fornecedor = () => fornecedorSelecionado = (Fornecedor)telaFornecedor.repositorio.SelecionarPorId(idEscolhido);
+            funcionario = () => funcionarioSelecionado = (Funcionario)telaFuncionario.repositorio.SelecionarPorId(idEscolhido);
+            novaRequisicao = () => novaRequisicaoEntrada = new RequisicaoEntrada(dataRequisicaoEntrada, medicamentoSelecionado, fornecedorSelecionado, funcionarioSelecionado, quantidade);
         }
         protected override void TabelaDeCadastro(params string[] texto)
         {
