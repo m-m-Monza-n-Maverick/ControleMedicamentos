@@ -25,7 +25,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
             Console.WriteLine("{0, -10} | {1, -20} | {2, -20} | {3, -20} | {4, -20}", 
                                 "Id", "Nome", "CPF", "Login", "Senha");
 
-            EntidadeBase[] funcionariosCadastrados = repositorio.SelecionarTodos();
+            ArrayList funcionariosCadastrados = repositorio.SelecionarTodos();
 
             foreach (Funcionario funcionario in funcionariosCadastrados)
             {

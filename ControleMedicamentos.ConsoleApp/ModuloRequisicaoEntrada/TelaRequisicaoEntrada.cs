@@ -48,7 +48,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicaoEntrada
                 "{0, -5} | {1, -20} | {2, -20} | {3, -20} | {4, -20} | {5, -20}",
                 "Id", "Data Requisição", "Medicamento", "Fornecedor", "Funcionário", "Quantidade" );
 
-            EntidadeBase[] requisicoesEntradaCadastradas = repositorio.SelecionarTodos();
+            ArrayList requisicoesEntradaCadastradas = repositorio.SelecionarTodos();
             foreach (RequisicaoEntrada requisicaoEntrada in requisicoesEntradaCadastradas)
             {
                 if (requisicaoEntrada == null) continue;

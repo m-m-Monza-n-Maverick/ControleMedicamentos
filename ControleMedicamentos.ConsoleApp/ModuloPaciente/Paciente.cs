@@ -21,5 +21,10 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             VerificaNulo(ref erros, CartaoSus, "cartão do SUS");
             return erros;
         }
+
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

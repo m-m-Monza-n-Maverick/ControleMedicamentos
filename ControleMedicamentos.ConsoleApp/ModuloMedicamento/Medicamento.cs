@@ -8,6 +8,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
         public string Descricao { get; set; }
         public string Lote { get; set; }
         protected DateTime DataValidade { get; set; }
+        protected EntidadeBase Fornecedor { get; set; }
 
         public Medicamento(string nome, string descricao, string lote, DateTime dataValidade)
         {
@@ -15,6 +16,17 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
             Descricao = descricao;
             Lote = lote;
             DataValidade = dataValidade;
+        }
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
+        {
+            Medicamento novasInformacoes = (Medicamento)novoRegistro;
+
+            this.Nome = novasInformacoes.Nome;
+            this.Descricao = novasInformacoes.Descricao;
+            this.Lote = novasInformacoes.Lote;
+            this.DataValidade = novasInformacoes.DataValidade;
+            this.Fornecedor = novasInformacoes.Fornecedor;
+            this.Quantidade = novasInformacoes.Quantidade;
         }
 
         public override ArrayList Validar()

@@ -19,7 +19,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             Console.WriteLine("{0, -10} | {1, -15} | {2, -15} | {3, -15}",
                                  "Id", "Nome", "Telefone", "Cartão do SUS" );
 
-            EntidadeBase[] pacientesCadastrados = repositorio.SelecionarTodos();
+            ArrayList pacientesCadastrados = repositorio.SelecionarTodos();
 
             foreach (Paciente paciente in pacientesCadastrados)
             {
@@ -53,7 +53,13 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             Console.Clear();
             ApresentarCabecalhoEntidade($"Cadastrando novo paciente...\n");
             Console.WriteLine("{0, -10} | {1, -15} | {2, -15} | {3, -15}", "Id", "Nome", "Telefone", "Cartão do SUS");
-            Console.Write(texto[0], repositorio.contadorId + 1, texto[1], texto[2]);
+            if (texto[1].Length > 15)
+            {
+                char[] oi = texto[1].ToCharArray();
+                texto[1] = null;
+                for (int i = 0; i < 12; i++) texto[1] += oi[i];
+            }
+            Console.Write(texto[0], repositorio.contadorId + 1, texto[1] + "...", texto[2]);
         }
     }
 }

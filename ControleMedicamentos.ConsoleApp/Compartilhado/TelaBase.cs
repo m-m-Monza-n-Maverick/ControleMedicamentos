@@ -157,7 +157,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
                 atributo = Console.ReadLine();
                 funcao();
                 erros = novaEntidade.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+                if (erros.Count != 0) ApresentarErros(erros);
             }
             while (erros.Count != 0);
         }
@@ -170,7 +170,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
                 atributo = RecebeInt("");
                 funcao();
                 erros = novaEntidade.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+                if (erros.Count != 0) ApresentarErros(erros);
             }
             while (erros.Count != 0);
         }
@@ -183,7 +183,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
                 atributo = RecebeData("");
                 funcao();
                 erros = novaEntidade.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+                if (erros.Count != 0) ApresentarErros(erros);
             }
             while (erros.Count != 0);
         }
@@ -201,7 +201,7 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
                 atributo();
                 funcao();
                 erros = novaEntidade.Validar();
-                if (erros.Count != 0) ApresentarErros(erros.GetRange(0, 1));
+                if (erros.Count != 0) ApresentarErros(erros);
             }
             while (erros.Count != 0);
         }

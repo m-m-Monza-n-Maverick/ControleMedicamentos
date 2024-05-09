@@ -42,7 +42,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
             Console.WriteLine( "{0, -5} | {1, -15} | {2, -15} | {3, -20} | {4, -5}",
                 "Id", "Medicamento", "Paciente", "Data de Requisição", "Quantidade" );
 
-            EntidadeBase[] requisicoesCadastradas = repositorio.SelecionarTodos();
+            ArrayList requisicoesCadastradas = repositorio.SelecionarTodos();
 
             foreach (RequisicaoSaida requisicao in requisicoesCadastradas)
             {

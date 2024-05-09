@@ -33,5 +33,10 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao
             Medicamento.Quantidade -= QuantidadeRetirada;
             return true;
         }
+
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

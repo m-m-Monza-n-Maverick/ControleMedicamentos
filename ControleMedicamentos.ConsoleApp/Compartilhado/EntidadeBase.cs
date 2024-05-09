@@ -8,7 +8,9 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
         public int Id { get; set; }
 
         public abstract ArrayList Validar();
+        public abstract void AtualizarRegistro(EntidadeBase novoRegistro);
 
+        #region Auxiliares
         protected void VerificaNulo(ref ArrayList erros, string campoTestado, string mostraCampo)
         {
             if (string.IsNullOrEmpty(campoTestado))
@@ -35,5 +37,6 @@ namespace ControleMedicamentos.ConsoleApp.Compartilhado
             else if (DataValidade.Year > 2100)
                 erros.Add($"\n{DataValidade.Year}? Também não despiroque né. Tente novamente ");
         }
+        #endregion
     }
 }

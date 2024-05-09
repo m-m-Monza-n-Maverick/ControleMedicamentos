@@ -27,7 +27,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
                 "{0, -10} | {1, -20} | {2, -20} | {3, -20}",
                 "Id", "Nome", "CNPJ", "Telefone" );
 
-            EntidadeBase[] fornecedoresCadastrados = repositorio.SelecionarTodos();
+            ArrayList fornecedoresCadastrados = repositorio.SelecionarTodos();
 
             foreach (Fornecedor fornecedor in fornecedoresCadastrados)
             {

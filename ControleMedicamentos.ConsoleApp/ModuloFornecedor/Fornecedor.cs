@@ -20,6 +20,11 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             this.cnpj = cnpj;
         }
 
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
+        {
+            throw new NotImplementedException();
+        }
+
         public override ArrayList Validar()
         {
             ArrayList erros = new ArrayList();

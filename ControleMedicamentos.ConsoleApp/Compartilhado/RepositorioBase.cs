@@ -1,15 +1,16 @@
-﻿namespace ControleMedicamentos.ConsoleApp.Compartilhado
+﻿using System.Collections;
+namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
     internal abstract class RepositorioBase
     {
-        private EntidadeBase[] registros = new EntidadeBase[100];
+        protected ArrayList registros = new ArrayList();
         public int contadorId = 0;
 
         public void Cadastrar(EntidadeBase novoRegistro)
         {
             contadorId++;
             novoRegistro.Id = contadorId;
-            RegistrarItem(novoRegistro);
+            registros.Add(novoRegistro);
         }
 
         public void Editar(int id, EntidadeBase novaEntidade)
@@ -21,22 +22,11 @@
         public void Excluir(int id) => registros[id - 1] = null;
 
         public bool ExistemItensCadastrados() => contadorId != 0;
-
-        public EntidadeBase[] SelecionarTodos()
-        {
-            return registros;
-        }
-
+        public ArrayList SelecionarTodos() => registros;
         public EntidadeBase SelecionarPorId(int id)
         {
-            for (int i = 0; i < registros.Length; i++)
-            {
-                EntidadeBase e = registros[i];
-
-                if (e == null) continue;
-
-                else if (e.Id == id) return e;
-            }
+            foreach (EntidadeBase entidade in registros) 
+                if (entidade.Id == id) return entidade;
             return null;
         }
 
@@ -49,16 +39,10 @@
 
         protected void RegistrarItem(EntidadeBase novoRegistro)
         {
-            for (int i = 0; i < registros.Length; i++)
+            for (int i = 0; i < registros.Count; i++)
             {
-                if (registros[i] != null)
-                    continue;
-
-                else
-                {
-                    registros[i] = novoRegistro;
-                    break;
-                }
+                registros[i] = novoRegistro;
+                break;
             }
         }
     }
